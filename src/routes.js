@@ -7,19 +7,56 @@ import UserProfile from "views/UserProfile.jsx";
 
 var routes = [
   {
-    path: "/dashboard",
+    path: "/home",
     name: "Home",
-    icon: "tim-icons icon-atom",
+    icon: "tim-icons icon-planet",
     component: Dashboard,
     layout: "/mh"
   },
   {
-    path: "/icons",
-    name: "Icons",
-    icon: "tim-icons icon-atom",
-    component: Icons,
+    path: "/favorites",
+    name: "Favoritos",
+    icon: "tim-icons icon-heart-2",
+    component: TableList,
     layout: "/mh"
   },
+  {
+    path: "/reservations",
+    name: "Mis Reservas",
+    icon: "tim-icons icon-calendar-60",
+    component: Typography,
+    layout: "/mh"
+  },
+  {
+    path: "/anocement",
+    name: "Mis Anuncios",
+    icon: "tim-icons icon-single-copy-04",
+    component: Typography,
+    layout: "/mh"
+  },
+  
+  {
+    path: "/mensage",
+    name: "Mensajes",
+    icon: "tim-icons icon-email-85",
+    component: Typography,
+    layout: "/mh"
+  },
+  {
+    path: "/payment",
+    name: "Mis Pagos",
+    icon: "tim-icons icon-money-coins",
+    component: Typography,
+    layout: "/mh"
+  },
+  {
+    path: "/profile",
+    name: "Perfil",
+    icon: "tim-icons icon-single-02",
+    component: UserProfile,
+    layout: "/mh"
+  },
+
   {
     path: "/notifications",
     name: "Notifications",
@@ -28,24 +65,10 @@ var routes = [
     layout: "/mh"
   },
   {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "tim-icons icon-single-02",
-    component: UserProfile,
-    layout: "/mh"
-  },
-  {
-    path: "/tables",
-    name: "Table List",
-    icon: "tim-icons icon-puzzle-10",
-    component: TableList,
-    layout: "/mh"
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: "tim-icons icon-align-center",
-    component: Typography,
+    path: "/icons",
+    name: "Icons",
+    icon: "tim-icons icon-atom",
+    component: Icons,
     layout: "/mh"
   },
 ];
