@@ -60,7 +60,7 @@ class MiHospedaje extends React.Component {
   };
   getRoutes = routes => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/mh") {
         return (
           <Route
             path={prop.layout + prop.path}

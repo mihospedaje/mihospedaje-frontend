@@ -11,7 +11,7 @@ var routes = [
     name: "Home",
     icon: "tim-icons icon-atom",
     component: Dashboard,
-    layout: "/"
+    layout: "/mh"
   },
   {
     path: "/icons",
