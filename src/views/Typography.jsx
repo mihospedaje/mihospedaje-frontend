@@ -1,222 +1,103 @@
 import React from "react";
-import Modal from 'components/Modal.js';
-import { Button } from  "components/Buttons.js";
-import ReactDOM from 'react-dom'
+import axios from 'axios';
 // reactstrap components
-import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
+import {
+    Card, CardHeader, CardBody, CardTitle, Row, Col, FormGroup,
+    Form, Input, Button, CardFooter
+} from "reactstrap";
+
+class Register extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {register: []};
+    
+        this.handleChange = this.handleChange.bind(this);
+        this.makepeticion = this.makepeticion.bind(this);
+    }
+    handleChange(event) {
+        let data = this.state.register;
+        data[parseInt(event.target.id, 10)] = event.target.value;
+        this.setState({ register:data });
+      }
 
 
-const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+    makepeticion(){
+        axios({
+            url: 'http://3.132.9.148:5000/graphql',
+            method: 'post',
+            data: {
+                query: `mutation {
+                            createUser(user: {
+                            name: "${this.state.register[0]}"
+                            lastname: "${this.state.register[1]}"
+                            birthdate: "${this.state.register[4]}"
+                            email: "${this.state.register[2]}"
+                            password: "${this.state.register[3]}"
+                            idrole:1
+                            }) {
+                            name
+                            }
+                        }
+                        `
+            }
+        }).then((result) => {
+            console.log(result.data.data.allUsers)
+        }).catch((e) =>{
+            console.log(e)
+        });
 
-const launchModal = ({ size, ...props }) => (event) => {
-  ReactDOM.createPortal(({ onClose }) => (
-        <Modal {...props} size={size} onClose={onClose}>
-            <Modal.Body>
-                {loremIpsum}
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={onClose}>
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    ));
-};
+    };
 
-class Typography extends React.Component {
-  render() {
-    return (
-      <>
-      <div className="content">
-          <Row>
-            <Col md="12">
-                  
-              <Card>
-                <CardHeader className="mb-5">
-                  <h5 className="card-category">Black Table Heading</h5>
-                  <CardTitle tag="h3">
-                    Created using Poppins Font Family
-                  </CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <div className="typography-line">
-                    <h1>
-                      <span>Header 1</span>
-                      The Life of Black Dashboard React
-                    </h1>
-                  </div>
-                  <div className="typography-line">
-                    <h2>
-                      <span>Header 2</span>
-                      The Life of Black Dashboard React
-                    </h2>
-                  </div>
-                  <div className="typography-line">
-                    <h3>
-                      <span>Header 3</span>
-                      The Life of Black Dashboard React
-                    </h3>
-                  </div>
-                  <div className="typography-line">
-                    <h4>
-                      <span>Header 4</span>
-                      The Life of Black Dashboard React
-                    </h4>
-                  </div>
-                  <div className="typography-line">
-                    <h5>
-                      <span>Header 5</span>
-                      The Life of Black Dashboard React
-                    </h5>
-                  </div>
-                  <div className="typography-line">
-                    <h6>
-                      <span>Header 6</span>
-                      The Life of Black Dashboard React
-                    </h6>
-                  </div>
-                  <div className="typography-line">
-                    <p>
-                      <span>Paragraph</span>
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers. I
-                      understand culture. I am the nucleus. I think that’s a
-                      responsibility that I have, to push possibilities, to show
-                      people, this is the level that things could be at.
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Quote</span>
-                    <blockquote>
-                      <p className="blockquote blockquote-primary">
-                        "I will be the leader of a company that ends up being
-                        worth billions of dollars, because I got the answers. I
-                        understand culture. I am the nucleus. I think that’s a
-                        responsibility that I have, to push possibilities, to
-                        show people, this is the level that things could be at."{" "}
-                        <br />
-                        <br />
-                        <small>- Noaa</small>
-                      </p>
-                    </blockquote>
-                  </div>
-                  <div className="typography-line">
-                    <span>Muted Text</span>
-                    <p className="text-muted">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Primary Text</span>
-                    <p className="text-primary">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Info Text</span>
-                    <p className="text-info">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Success Text</span>
-                    <p className="text-success">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Warning Text</span>
-                    <p className="text-warning">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <span>Danger Text</span>
-                    <p className="text-danger">
-                      I will be the leader of a company that ends up being worth
-                      billions of dollars, because I got the answers...
-                    </p>
-                  </div>
-                  <div className="typography-line">
-                    <h2>
-                      <span>Small Tag</span>
-                      Header with small subtitle <br />
-                      <small>Use "small" tag for the headers</small>
-                    </h2>
-                  </div>
-                  <div className="typography-line">
-                    <span>Lists</span>
+    render() {
+        return (
+            <>
+                <div className="content">
                     <Row>
-                      <Col md="3">
-                        <h5>Unordered List</h5>
-                        <ul>
-                          <li>List Item</li>
-                          <li>List Item</li>
-                          <li className="list-unstyled">
-                            <ul>
-                              <li>List Item</li>
-                              <li>List Item</li>
-                              <li>List Item</li>
-                            </ul>
-                          </li>
-                          <li>List Item</li>
-                        </ul>
-                      </Col>
-                      <Col md="3">
-                        <h5>Ordered List</h5>
-                        <ol>
-                          <li>List Item</li>
-                          <li>List Item</li>
-                          <li>List item</li>
-                          <li>List Item</li>
-                        </ol>
-                      </Col>
-                      <Col md="3">
-                        <h5>Unstyled List</h5>
-                        <ul className="list-unstyled">
-                          <li>List Item</li>
-                          <li>List Item</li>
-                          <li>List item</li>
-                          <li>List Item</li>
-                        </ul>
-                      </Col>
-                      <Col md="3">
-                        <h5>Inline List</h5>
-                        <ul className="list-inline">
-                          <li className="list-inline-item">List1</li>
-                          <li className="list-inline-item">List2</li>
-                          <li className="list-inline-item">List3</li>
-                        </ul>
-                      </Col>
+                        <Col md="6">
+                            <Card>
+                                <CardHeader className="mb-0">
+                                    <h5 className="card-category">MiHospedaje</h5>
+                                    <CardTitle tag="h3">
+                                        Regístrese
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    <Form>
+                                        <FormGroup>
+                                            <label>Nombre</label>
+                                            <Input id="0" placeholder="Nombre" type="text" onChange={this.handleChange} />
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label>Apellido</label>
+                                            <Input id="1" placeholder="Apellido" type="text"  onChange={this.handleChange}/>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label> Correo Electronico</label>
+                                            <Input id="2" placeholder="email@email.com" type="email" onChange={this.handleChange} />
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label> Contraseña</label>
+                                            <Input id="3" type="password" onChange={this.handleChange}/>
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label> Fecha de Nacimiento</label>
+                                            <Input id="4" type="date" onChange={this.handleChange} />
+                                        </FormGroup>
+                                    </Form>
+                                </CardBody>
+                                <CardFooter>
+                                    <Button className="btn-fill" color="primary" type="submit" onClick={this.makepeticion}>
+                                        Registrarse
+                  </Button>
+                                </CardFooter>
+                            </Card>
+                        </Col>
                     </Row>
-                  </div>
-                  <div className="typography-line">
-                    <span>Code</span>
-                    <p>
-                      This is <code>.css-class-as-code</code>
-                      , an example of an inline code element. Wrap inline code
-                      within a <code>{`<code>...</code>`}</code>
-                      tag.
-                    </p>
-                    <pre>
-                      1. #This is an example of preformatted text.<br />
-                      2. #Here is another line of code
-                    </pre>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </div>
-       
-      </>
-    );
-  }
+                </div>
+
+            </>
+        );
+    }
 }
 
-export default Typography;
+export default Register;

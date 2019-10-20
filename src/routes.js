@@ -4,6 +4,7 @@ import Notifications from "views/Notifications.jsx";
 import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
 import UserProfile from "views/UserProfile.jsx";
+import Register from "views/Registro.jsx";
 
 var routes = [
   {
@@ -69,6 +70,13 @@ var routes = [
     name: "Icons",
     icon: "tim-icons icon-atom",
     component: Icons,
+    layout: "/mh"
+  },
+  {
+    path: "/register",
+    name: "Home",
+    icon: "tim-icons icon-planet",
+    component: Register,
     layout: "/mh"
   },
 ];
