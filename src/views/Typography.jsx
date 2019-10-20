@@ -1,32 +1,36 @@
-/*!
-
-=========================================================
-* Black Dashboard React v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
-
+import Modal from 'components/Modal.js';
+import { Button } from  "components/Buttons.js";
+import ReactDOM from 'react-dom'
 // reactstrap components
 import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
+
+
+const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+const launchModal = ({ size, ...props }) => (event) => {
+  ReactDOM.createPortal(({ onClose }) => (
+        <Modal {...props} size={size} onClose={onClose}>
+            <Modal.Body>
+                {loremIpsum}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={onClose}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    ));
+};
 
 class Typography extends React.Component {
   render() {
     return (
       <>
-        <div className="content">
+      <div className="content">
           <Row>
             <Col md="12">
+                  
               <Card>
                 <CardHeader className="mb-5">
                   <h5 className="card-category">Black Table Heading</h5>
@@ -209,6 +213,7 @@ class Typography extends React.Component {
             </Col>
           </Row>
         </div>
+       
       </>
     );
   }
