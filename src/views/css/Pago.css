@@ -1,0 +1,42 @@
+.pago{
+    height: relative;
+    width: relative;
+    max-width: relative;
+	min-height: 80px;
+    margin: 25px;
+    padding: auto;
+    border-color: rgb(99, 14, 96);
+    border-width: medium;
+    border-style: solid;
+    border-left: none;
+    border-right: none;
+}
+#fechas{
+    min-height: 60px;
+    min-width: 90px;
+    width: relative;
+    height: relative;
+    display: inline-block;
+    padding-top: 30px;
+    margin-right: 20%;
+}
+#huespedes{
+    min-height: 80px;
+    display: inline-block;
+    min-width: 90px;
+    width: relative;
+    height: relative;
+    padding-top: 30px;
+    margin-right: 20%;
+    
+}
+#total{
+    min-height: 80px;
+    min-width: 90px;
+    width: relative;
+    height: relative;
+    padding-top: 30px;
+    display: inline-block;
+    margin-right: 20%;
+    
+}

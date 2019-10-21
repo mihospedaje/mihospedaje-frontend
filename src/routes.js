@@ -1,8 +1,9 @@
-import Dashboard from "views/Dashboard.jsx";
+import Home from "views/Home.jsx";
 import Icons from "views/Icons.jsx";
 import Notifications from "views/Notifications.jsx";
 import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
+import TusPagos from "views/TusPagos.jsx";
 import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
 
@@ -11,7 +12,7 @@ var routes = [
     path: "/home",
     name: "Home",
     icon: "tim-icons icon-planet",
-    component: Dashboard,
+    component: Home,
     layout: "/mh"
   },
   {
@@ -47,7 +48,7 @@ var routes = [
     path: "/payment",
     name: "Mis Pagos",
     icon: "tim-icons icon-money-coins",
-    component: Typography,
+    component: TusPagos,
     layout: "/mh"
   },
   {
