@@ -1,6 +1,5 @@
 import React from "react";
 import {Card,Row,Col} from "reactstrap";
-
 import { makeStyles } from '@material-ui/core/styles';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,10 +10,6 @@ import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles({
-  card: {
-    minWidth: 150,
-    
-  },
   media: {
     height: 250
   },
@@ -27,8 +22,8 @@ export default function Home() {
     return (
         <div className="content">
           <Row>
-            <Col xs="4">
-              <Card className={classes.card}>
+            <Col lg="4">
+              <Card >
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -47,17 +42,14 @@ export default function Home() {
                 </CardActionArea>
                 <CardActions>
                   <Button size="small" color="primary" >
-                    Share
-                  </Button>
-                  <Button size="small" color="primary" >
-                    Learn More
+                     favorito
                   </Button>
                 </CardActions>
               </Card>
             </Col>
 
-            <Col xs="4">
-              <Card className={classes.card}>
+            <Col lg="4">
+              <Card >
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -74,18 +66,15 @@ export default function Home() {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    Share
-                  </Button>
-                  <Button size="small" color="primary">
-                    Learn More
+                  <Button size="small" color="primary" >
+                     favorito
                   </Button>
                 </CardActions>
               </Card>
             </Col>
 
-            <Col xs="4">
-              <Card className={classes.card}>
+            <Col lg="4">
+              <Card >
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -102,47 +91,44 @@ export default function Home() {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    Share
-                  </Button>
-                  <Button size="small" color="primary">
-                    Learn More
+                  <Button size="small" color="primary" >
+                     favorito
                   </Button>
                 </CardActions>
               </Card>
             </Col>
           </Row>
           <Row>
-            <Col xs="4">
+            <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
-            <Col xs="4">
+            <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
-            <Col xs="4">
+            <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
           </Row>
           <Row>
-          <Col xs="4">
+          <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
-            <Col xs="4">
+            <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
-            <Col xs="4">
+            <Col lg="4">
               <Card >
-              <h3>jsdfjjfg</h3>
+              <h3>próximamente</h3>
               </Card>
             </Col>
           </Row>
@@ -152,4 +138,4 @@ export default function Home() {
 
 }
 
-//export default Dashboard;
+
