@@ -9,7 +9,7 @@ import {
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {register: []};
+        this.state = {profile: ['']};
     
         this.handleChange = this.handleChange.bind(this);
         this.makepeticion = this.makepeticion.bind(this);
@@ -22,6 +22,7 @@ class Register extends React.Component {
 
 
     makepeticion(){
+        /*
         axios({
             url: 'http://3.132.9.148:5000/graphql',
             method: 'post',
@@ -45,7 +46,7 @@ class Register extends React.Component {
         }).catch((e) =>{
             console.log(e)
         });
-
+        */
     };
 
     render() {
@@ -53,41 +54,29 @@ class Register extends React.Component {
             <>
                 <div className="content">
                     <Row className="justify-content-center">
-                        <Col md="6">
-                            <Card>
-                                <CardHeader className=" text-center mb-0">
+                        <Col md="5">
+                            <Card >
+                                <CardHeader className="text-center mb-0">
                                     <h5 className="card-category">MiHospedaje</h5>
-                                    <CardTitle className="text-center" tag="h3">
-                                        Regístrese
+                                    <CardTitle tag="h3">
+                                        Iniciar Sesión
                                     </CardTitle>
                                 </CardHeader>
                                 <CardBody>
                                     <Form>
                                         <FormGroup>
-                                            <label>Nombre</label>
-                                            <Input id="0" placeholder="Nombre" type="text" onChange={this.handleChange} />
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <label>Apellido</label>
-                                            <Input id="1" placeholder="Apellido" type="text"  onChange={this.handleChange}/>
-                                        </FormGroup>
-                                        <FormGroup>
                                             <label> Correo Electronico</label>
-                                            <Input id="2" placeholder="email@email.com" type="email" onChange={this.handleChange} />
+                                            <Input id="0" placeholder="email@email.com" type="email" onChange={this.handleChange} />
                                         </FormGroup>
                                         <FormGroup>
                                             <label> Contraseña</label>
-                                            <Input id="3" type="password" onChange={this.handleChange}/>
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <label> Fecha de Nacimiento</label>
-                                            <Input id="4" type="date" onChange={this.handleChange} />
+                                            <Input id="1" type="password" onChange={this.handleChange}/>
                                         </FormGroup>
                                     </Form>
                                 </CardBody>
                                 <CardFooter className="text-center">
                                     <Button className="btn-fill" color="primary" type="submit" onClick={this.makepeticion}>
-                                        Registrarse
+                                        Iniciar Sesion
                   </Button>
                                 </CardFooter>
                             </Card>
