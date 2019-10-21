@@ -99,6 +99,8 @@ class Sidebar extends React.Component {
           ) : null}
           <Nav>
             {routes.map((prop, key) => {
+              if(prop.name == "Register") return null;
+              if(prop.name == "Login") return null;
               if (prop.redirect) return null;
               return (
                 <li

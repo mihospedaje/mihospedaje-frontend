@@ -1,3 +1,4 @@
+  
 import React from "react";
 import {Card,Row,Col} from "reactstrap";
 import { makeStyles } from '@material-ui/core/styles';
@@ -138,4 +139,8 @@ export default function Home() {
 
 }
 
+<<<<<<< HEAD
 
+=======
+//export default Dashboard;
+>>>>>>> b212d176023b72652ca386c24204807816bdde32

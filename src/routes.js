@@ -6,6 +6,7 @@ import Typography from "views/Typography.jsx";
 import TusPagos from "views/TusPagos.jsx";
 import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
+import Login from "views/Login.jsx";
 
 var routes = [
   {
@@ -75,9 +76,14 @@ var routes = [
   },
   {
     path: "/register",
-    name: "Home",
-    icon: "tim-icons icon-planet",
+    name: "Register",
     component: Register,
+    layout: "/mh"
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
     layout: "/mh"
   },
 ];
