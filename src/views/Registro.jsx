@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import NotificationAlert from "react-notification-alert";
+import {GraphQLURL} from '../ipgraphql'
 // reactstrap components
 import {
     Card, CardHeader, CardBody, CardTitle, Row, Col, FormGroup,
@@ -20,7 +21,6 @@ class Register extends React.Component {
         let data = this.state.register;
         data[parseInt(event.target.id, 10)] = event.target.value;
         this.setState({ register:data });
-        let complete = true;
       }
 
 
@@ -34,7 +34,7 @@ class Register extends React.Component {
 
         if(complete){
         axios({
-            url: 'http://3.132.9.148:5000/graphql',
+            url: GraphQLURL,
             method: 'post',
             data: {
                 query: `mutation {

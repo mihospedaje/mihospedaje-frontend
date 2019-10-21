@@ -9,19 +9,20 @@ import {
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {profile: ['']};
+        this.state = {datalogin: ['']};
     
         this.handleChange = this.handleChange.bind(this);
-        this.makepeticion = this.makepeticion.bind(this);
+        this.login = this.login.bind(this);
     }
     handleChange(event) {
-        let data = this.state.register;
+        let data = this.state.datalogin;
         data[parseInt(event.target.id, 10)] = event.target.value;
-        this.setState({ register:data });
+        this.setState({ datalogin:data});
+        console.log(this.state.datalogin);
       }
 
 
-    makepeticion(){
+    login(){
         /*
         axios({
             url: 'http://3.132.9.148:5000/graphql',
@@ -47,6 +48,9 @@ class Register extends React.Component {
             console.log(e)
         });
         */
+       console.log(this.state.datalogin);
+       localStorage.setItem('UsrID', parseInt(this.state.datalogin[0], 10));
+       window.location.pathname = 'mh/profile'
     };
 
     render() {
@@ -75,7 +79,7 @@ class Register extends React.Component {
                                     </Form>
                                 </CardBody>
                                 <CardFooter className="text-center">
-                                    <Button className="btn-fill" color="primary" type="submit" onClick={this.makepeticion}>
+                                    <Button className="btn-fill" color="primary" type="submit" onClick={this.login}>
                                         Iniciar Sesion
                   </Button>
                                 </CardFooter>

@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 
 
 export default function Home() {
-
+  console.log(localStorage);
  const classes = useStyles();
     return (
         <div className="content">
@@ -139,8 +139,3 @@ export default function Home() {
 
 }
 
-<<<<<<< HEAD
-
-=======
-//export default Dashboard;
->>>>>>> b212d176023b72652ca386c24204807816bdde32
