@@ -1,10 +1,12 @@
 import React from "react";
 import axios from 'axios';
+import NotificationAlert from "react-notification-alert";
 // reactstrap components
 import {
     Card, CardHeader, CardBody, CardTitle, Row, Col, FormGroup,
     Form, Input, Button, CardFooter
 } from "reactstrap";
+
 
 class Register extends React.Component {
     constructor(props) {
@@ -18,10 +20,19 @@ class Register extends React.Component {
         let data = this.state.register;
         data[parseInt(event.target.id, 10)] = event.target.value;
         this.setState({ register:data });
+        let complete = true;
       }
 
 
     makepeticion(){
+        let complete = true;
+        for(let i = 0; i<5;i++){
+            if(this.state.register[i]==undefined){
+                complete = false;
+            }
+        }
+
+        if(complete){
         axios({
             url: 'http://3.132.9.148:5000/graphql',
             method: 'post',
@@ -41,17 +52,50 @@ class Register extends React.Component {
                         `
             }
         }).then((result) => {
-            console.log(result.data.data.allUsers)
+            console.log(result)
+            if(result.data.data!=null){
+            this.notify(["success","Registro Exitoso"]);
+            window.location.pathname = '/mh/login'
+            
+            }else{
+                this.notify(["danger","Registro Fallido"]);    
+            }
+
         }).catch((e) =>{
             console.log(e)
+            this.notify(["danger","Registro Fallido"]);  
+            
         });
-
+        }else{
+            this.notify(["danger","Datos Incompletos"]);    
+        }
     };
+    notify = place => {
+        var type = place[0];
+        var options = {};
+        options = {
+          place: "tc",
+          message: (
+            <div>
+              <div>
+                {place[1]}
+              </div>
+            </div>
+          ),
+          type: type,
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7
+        };
+        this.refs.notificationAlert.notificationAlert(options);
+      };
 
     render() {
         return (
             <>
                 <div className="content">
+                <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" />
+          </div>
                     <Row className="justify-content-center">
                         <Col md="6">
                             <Card>
@@ -63,7 +107,7 @@ class Register extends React.Component {
                                 </CardHeader>
                                 <CardBody>
                                     <Form>
-                                        <FormGroup>
+                                        <FormGroup> 
                                             <label>Nombre</label>
                                             <Input id="0" placeholder="Nombre" type="text" onChange={this.handleChange} />
                                         </FormGroup>
@@ -99,5 +143,10 @@ class Register extends React.Component {
         );
     }
 }
+/*
+{// we don't want the Footer to be rendered on map page	            <Footer fluid />
+this.props.location.pathname.indexOf("maps") !== -1 ? null : (	
+    <Footer fluid />	
+  )}*/
 
 export default Register;
