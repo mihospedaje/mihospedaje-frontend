@@ -55,8 +55,8 @@ class Register extends React.Component {
             console.log(result)
             if(result.data.data!=null){
                 let a = result.data.data.createUser.id
-                this.notify(["success","Registro Exitoso con id".concat(a)]);
-                window.location.pathname = '/mh/login'
+                this.notify(["success","Registro Exitoso con id: ".concat(a)]);
+                //window.location.pathname = '/mh/login'
             
             }else{
                 this.notify(["danger","Registro Fallido"]);    
