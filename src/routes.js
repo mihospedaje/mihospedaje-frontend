@@ -20,7 +20,7 @@ var routes = [
     path: "/favorites",
     name: "Favoritos",
     icon: "tim-icons icon-heart-2",
-    component: TableList,
+    component: Home, //TableList
     layout: "/mh"
   },
   {
@@ -34,17 +34,10 @@ var routes = [
     path: "/anocement",
     name: "Mis Anuncios",
     icon: "tim-icons icon-single-copy-04",
-    component: Typography,
+    component: Home, //Typography
     layout: "/mh"
   },
   
-  {
-    path: "/mensage",
-    name: "Mensajes",
-    icon: "tim-icons icon-email-85",
-    component: Typography,
-    layout: "/mh"
-  },
   {
     path: "/payment",
     name: "Mis Pagos",
@@ -59,7 +52,7 @@ var routes = [
     component: UserProfile,
     layout: "/mh"
   },
-
+  /*
   {
     path: "/notifications",
     name: "Notifications",
@@ -67,6 +60,7 @@ var routes = [
     component: Notifications,
     layout: "/mh"
   },
+  
   {
     path: "/icons",
     name: "Icons",
@@ -74,15 +68,18 @@ var routes = [
     component: Icons,
     layout: "/mh"
   },
+  */
   {
     path: "/register",
     name: "Register",
+    icon: "tim-icons icon-check-2",
     component: Register,
     layout: "/mh"
   },
   {
     path: "/login",
     name: "Login",
+    icon: "tim-icons icon-badge",
     component: Login,
     layout: "/mh"
   },

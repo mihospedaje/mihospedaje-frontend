@@ -46,7 +46,7 @@ class Register extends React.Component {
                             password: "${this.state.register[3]}"
                             idrole:1
                             }) {
-                            name
+                            id
                             }
                         }
                         `
@@ -54,8 +54,9 @@ class Register extends React.Component {
         }).then((result) => {
             console.log(result)
             if(result.data.data!=null){
-            this.notify(["success","Registro Exitoso"]);
-            window.location.pathname = '/mh/login'
+                let a = result.data.data.createUser.id
+                this.notify(["success","Registro Exitoso con id".concat(a)]);
+                window.location.pathname = '/mh/login'
             
             }else{
                 this.notify(["danger","Registro Fallido"]);    

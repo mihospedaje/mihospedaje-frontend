@@ -69,7 +69,7 @@ class Register extends React.Component {
                                 <CardBody>
                                     <Form>
                                         <FormGroup>
-                                            <label> Correo Electronico</label>
+                                            <label> Usuario ID</label>
                                             <Input id="0" placeholder="email@email.com" type="email" onChange={this.handleChange} />
                                         </FormGroup>
                                         <FormGroup>

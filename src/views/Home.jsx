@@ -36,8 +36,8 @@ export default function Home() {
                       Bogotá
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Camas super comodas no se diga mas hptas, a venirse para acá despues
-                      de un cinco en arqui
+                      Camas super comodas, no se diga mas, animate
+                      
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -59,7 +59,7 @@ export default function Home() {
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Medallo
+                      Medellin
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                       Todo incluido, compralo ahora!
@@ -84,10 +84,10 @@ export default function Home() {
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Cali oís
+                      Cali - Tarragona
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Venite pues papá que para mañana es tarde
+                      4 cuartos, 2 baños, conjunto con piscina
                     </Typography>
                   </CardContent>
                 </CardActionArea>
