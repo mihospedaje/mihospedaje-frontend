@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CardLodging from "components/CardLodging.jsx";
 
 
 const useStyles = makeStyles({
@@ -24,29 +25,7 @@ export default function Home() {
         <div className="content">
           <Row>
             <Col lg="4">
-              <Card >
-                <CardActionArea>
-                  <CardMedia
-                    className={classes.media}
-                    image={require("../assets/img/hospedaje.jpeg")}
-                    title="hospedaje"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Bogotá
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Camas super comodas, no se diga mas, animate
-                      
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button size="small" color="primary" >
-                     favorito
-                  </Button>
-                </CardActions>
-              </Card>
+            <CardLodging name="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"/>
             </Col>
 
             <Col lg="4">
