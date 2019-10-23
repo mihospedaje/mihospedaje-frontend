@@ -9,7 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import {Card,Row,Col} from "reactstrap";
+import {Card,Row,Col,CardBody,CardHeader} from "reactstrap";
+import { func } from "prop-types";
 
 const useStyles = makeStyles({
     media: {
@@ -17,15 +18,26 @@ const useStyles = makeStyles({
 },
 });
 var sectionStyle = {
-    color: "red",
+    fontSize : "100%",
     
 
   };
+var lodginginfo ={
 
-
+}
+function getlodging(){
+    return {name:"Finca El Tesoro",location:"Villeta, Cundinamarca",type:"Habitacion Privada",precio:198000,id:1};
+};
+function getreservation(){
+    return {fechast:"2019/09/09",fechaend:"2019/09/19",adults:1,children:1,total:198000};
+};
 
 export default function LodgingCard(props) {
     const classes = useStyles();
+    var lodginginfo = getlodging();
+    if(props.reserva=="true"){
+        var reserinfo = getreservation()
+    }
         return (
             <>
              <Card>
@@ -33,24 +45,34 @@ export default function LodgingCard(props) {
                   <CardMedia
                     className={classes.media}
                     image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-                    title="hospedaje"
-                    
+                    title="hospedaje"                    
                   />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+               
+                          
+                <CardBody>
                     <Row>
-                        <Col lg="10">Bogota</Col>
-                        <IconButton aria-label="add to favorites"><FavoriteIcon/></IconButton>
+                        <Col>
+                        <p>{lodginginfo.location}</p> 
+                        <p style={{fontSize : "180%"}} className="title">{lodginginfo.name}</p>
+                        <p>{lodginginfo.type}</p>
+                        {
+                            props.reserva== "true" ? null :(
+                                <p>${lodginginfo.precio} COP por noche</p>
+                            )
+                        }
+                        {
+                            props.reserva== "false" ? null :(
+                                <div>
+                                <p>{reserinfo.fechast} -> {reserinfo.fechaend}</p>
+                                <p>Huéspedes:{reserinfo.adults} Adulto(s), {reserinfo.children} Niño(s)</p>
+                                <p>Total: ${reserinfo.total} COP</p>
+                                </div>
+                            )
+                        }
+                        </Col>
+                        <div className="justify-content-center"><IconButton aria-label="add to favorites"><FavoriteIcon/></IconButton></div>
                     </Row>
-                    
-                      
-                      
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Camas super comodas, no se diga mas, animate
-                    </Typography>
-            
-                  </CardContent>
+                </CardBody>
                 </CardActionArea>
                 </Card>
             </>

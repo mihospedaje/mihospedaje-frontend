@@ -25,7 +25,7 @@ export default function Home() {
         <div className="content">
           <Row>
             <Col lg="4">
-            <CardLodging id="1"/>
+            <CardLodging id="1" reserva = "false"/>
             </Col>
 
             <Col lg="4">
