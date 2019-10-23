@@ -32,7 +32,7 @@ export default function LodgingCard(props) {
               <CardActionArea>
                   <CardMedia
                     className={classes.media}
-                    image={props.name}
+                    image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
                     title="hospedaje"
                     
                   />
@@ -40,7 +40,7 @@ export default function LodgingCard(props) {
                     <Typography gutterBottom variant="h5" component="h2">
                     <Row>
                         <Col lg="10">Bogota</Col>
-                        <IconButton style={sectionStyle} aria-label="add to favorites"><FavoriteIcon/></IconButton>
+                        <IconButton aria-label="add to favorites"><FavoriteIcon/></IconButton>
                     </Row>
                     
                       

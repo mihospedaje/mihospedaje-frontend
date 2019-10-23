@@ -25,7 +25,7 @@ export default function Home() {
         <div className="content">
           <Row>
             <Col lg="4">
-            <CardLodging name="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"/>
+            <CardLodging id="1"/>
             </Col>
 
             <Col lg="4">
