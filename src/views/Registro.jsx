@@ -13,7 +13,6 @@ class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {register: []};
-    
         this.handleChange = this.handleChange.bind(this);
         this.makepeticion = this.makepeticion.bind(this);
     }
@@ -148,6 +147,7 @@ class Register extends React.Component {
 {// we don't want the Footer to be rendered on map page	            <Footer fluid />
 this.props.location.pathname.indexOf("maps") !== -1 ? null : (	
     <Footer fluid />	
-  )}*/
+)}
+*/
 
 export default Register;
