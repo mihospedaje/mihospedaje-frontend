@@ -4,16 +4,11 @@ import {GraphQLURL} from '../ipgraphql'
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   CardText,
-  CardTitle,
-  FormGroup,
-  Form,
-  Input,
   Row,
   Col
 } from "reactstrap";
