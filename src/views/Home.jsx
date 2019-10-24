@@ -1,14 +1,7 @@
 
 import React from "react";
 import axios from 'axios';
-import { Card, Row, Col } from "reactstrap";
-import { makeStyles } from '@material-ui/core/styles';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {Row, Col} from "reactstrap";
 import CardLodging from "components/CardLodging.jsx";
 import { GraphQLURL } from '../ipgraphql'
 
@@ -19,14 +12,15 @@ class Home extends React.Component {
     this.state = {
       charge: false,
       load: false,
-      page: null
+      page: null,
+      another: []
     };
     this.getlodging = this.getlodging.bind(this);
   }
   generatecol(info) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} reserva="false" />
+        <CardLodging lodinfo={info} reserva= {null} onClick={console.log("S")}/>
       </Col>
     );
   }
@@ -64,7 +58,6 @@ class Home extends React.Component {
                     `
       }
     }).then((result) => {
-      console.log(result.data.data)
       var info = result.data.data.allLodgings
       let lodgings = []
       let i = 0
@@ -87,13 +80,15 @@ class Home extends React.Component {
         j += 1
         i += 3
       }
-      this.setState({ load: true, page: lodgings })
+      this.setState({ load: true, page: lodgings });
+     
     }).catch((e) => {
       console.log(e)
     });
   };
 
   render() {
+    this.state.another.push(<p onClick={console.log("S")}>SSSSSSSSSSSS</p>)
     if (!this.state.load) {
       if (!this.state.charge) {
         this.getlodging();
@@ -106,7 +101,7 @@ class Home extends React.Component {
       return (
         <>
           <div className="content">
-            {this.state.page}
+             {this.state.page} 
           </div>
         </>
       );
