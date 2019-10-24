@@ -51,7 +51,6 @@ class CardLodging extends React.Component {
                             onClick={() => this.gotolodging()}
                         />
 
-
                         <CardBody >
                             <Row >
                                 <Col onClick={() => this.gotolodging()}>
