@@ -1,12 +1,12 @@
 import Home from "views/Home.jsx";
 import Icons from "views/Icons.jsx";
 import Notifications from "views/Notifications.jsx";
-import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
 import TusPagos from "views/TusPagos.jsx";
 import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
 import Login from "views/Login.jsx";
+import Lodging from "views/Lodging.jsx";
 
 var routes = [
   {
@@ -71,16 +71,23 @@ var routes = [
   */
   {
     path: "/register",
-    name: "Register",
+    name: "Registro",
     icon: "tim-icons icon-check-2",
     component: Register,
     layout: "/mh"
   },
   {
     path: "/login",
-    name: "Login",
+    name: "Iniciar Sesión",
     icon: "tim-icons icon-badge",
     component: Login,
+    layout: "/mh"
+  },
+  {
+    path: "/lodging",
+    name: "Hospedaje",
+    icon: "tim-icons icon-badge",
+    component: Lodging,
     layout: "/mh"
   },
 ];

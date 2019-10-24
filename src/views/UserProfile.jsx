@@ -1,7 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import {GraphQLURL} from '../ipgraphql'
-
+import CardMedia from '@material-ui/core/CardMedia';
 // reactstrap components
 import {
   Card,
@@ -18,7 +18,8 @@ class UserProfile extends React.Component {
     super(props);
     this.state = {
     profile: [],
-    load : false
+    load : false,
+    charge: false
     };
     this.getinfoprofile = this.getinfoprofile.bind(this);
 }
@@ -62,8 +63,11 @@ class UserProfile extends React.Component {
   });
   }
   render() {
-    if(!this.state.load){
+    if (!this.state.load) {
+      if (!this.state.charge) {
       this.getinfoprofile();
+      this.setState({ charge: true });
+      }
       return(<>
       <div className="content"></div>
       </>)
@@ -79,11 +83,12 @@ class UserProfile extends React.Component {
                   <div className="author">
                     <div className="block block-one" />
                   </div>
-                  <div>
-                    <a>
-                      <img alt="..." src={require("assets/img/2.jpg")}/>
-                    </a>
-                  </div>
+                  <CardMedia
+                            image="https://www.emprenderalia.com/wp-content/uploads/tipo-de-persona-emprendedor-1152x768.jpg"
+                            title="hospedaje"
+                            style={{ height: 360 }}
+                            onClick={() => this.gotolodging()}
+                        />
                 </CardBody>
               </Card>
             </Col>

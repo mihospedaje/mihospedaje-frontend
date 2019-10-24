@@ -4,7 +4,6 @@ import axios from 'axios';
 import {Row, Col} from "reactstrap";
 import CardLodging from "components/CardLodging.jsx";
 import { GraphQLURL } from '../ipgraphql'
-import { LocationCity } from "material-ui-icons";
 
 
 class Home extends React.Component {
@@ -13,8 +12,7 @@ class Home extends React.Component {
     this.state = {
       charge: false,
       load: false,
-      page: null,
-      another: []
+      lodginginfo: [],
     };
     this.getlodging = this.getlodging.bind(this);
   }
@@ -39,31 +37,9 @@ class Home extends React.Component {
       </Row>
     )
   }
-  getlocation(idlocation) {
-    let city,country;
-
-    axios({
-      url: GraphQLURL,
-      method: 'post',
-      data: {
-        query: `query {
-          locationById(location_id:${idlocation}){
-            country
-            city
-          }
-        }
-                    `
-      }
-    }).then((result) => {
-      var info = result.data.data.locationById
-      country = info[0]
-      city = info[1]
-           
-    }).catch((e) => {
-      console.log(e)
-    });
-    return city.concat(",",country)
-  };
+  getlocation() {
+    return "Ciudad, Pais"
+  }
   getlodging() {
     axios({
       url: GraphQLURL,
