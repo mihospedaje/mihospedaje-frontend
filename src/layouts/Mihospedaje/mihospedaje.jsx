@@ -118,13 +118,12 @@ class MiHospedaje extends React.Component {
             <Footer fluid />
           </div>
         </div>
-        <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          handleBgClick={this.handleBgClick}
-        />
       </>
     );
   }
 }
-
+/*<FixedPlugin
+          bgColor={this.state.backgroundColor}
+          handleBgClick={this.handleBgClick}
+        />*/
 export default MiHospedaje;

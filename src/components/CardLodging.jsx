@@ -34,7 +34,21 @@ function getreservation(){
 
 export default function LodgingCard(props) {
     const classes = useStyles();
-    var lodginginfo = getlodging();
+    var lodginginfo = props.lodinfo;
+    switch(lodginginfo.lodging_provide){
+        case 1 : 
+            lodginginfo.lodging_provide = "Alojamiento Entero"
+        break;
+        case 2 : 
+            lodginginfo.lodging_provide = "Habitación Privada"
+        break;
+        case 3 : 
+            lodginginfo.lodging_provide = "Habitación Compartida"
+        break;
+
+
+    }
+
     if(props.reserva=="true"){
         var reserinfo = getreservation()
     }
@@ -52,12 +66,12 @@ export default function LodgingCard(props) {
                 <CardBody>
                     <Row>
                         <Col>
-                        <p>{lodginginfo.location}</p> 
-                        <p style={{fontSize : "180%"}} className="title">{lodginginfo.name}</p>
-                        <p>{lodginginfo.type}</p>
+                        <p>{lodginginfo.location_id}</p> 
+                        <p style={{fontSize : "180%"}} className="title">{lodginginfo.lodging_name}</p>
+                        <p>{lodginginfo.lodging_provide}</p>
                         {
                             props.reserva== "true" ? null :(
-                                <p>${lodginginfo.precio} COP por noche</p>
+                                <p>${lodginginfo.price_per_person_and_nigth} COP por noche</p>
                             )
                         }
                         {
