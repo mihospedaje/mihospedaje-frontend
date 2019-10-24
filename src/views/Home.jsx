@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Row, Col} from "reactstrap";
 import CardLodging from "components/CardLodging.jsx";
 import { GraphQLURL } from '../ipgraphql'
-import { LocationCity } from "material-ui-icons";
+
 
 
 class Home extends React.Component {
@@ -14,7 +14,6 @@ class Home extends React.Component {
       charge: false,
       load: false,
       page: null,
-      another: []
     };
     this.getlodging = this.getlodging.bind(this);
   }
@@ -39,31 +38,6 @@ class Home extends React.Component {
       </Row>
     )
   }
-  getlocation(idlocation) {
-    let city,country;
-
-    axios({
-      url: GraphQLURL,
-      method: 'post',
-      data: {
-        query: `query {
-          locationById(location_id:${idlocation}){
-            country
-            city
-          }
-        }
-                    `
-      }
-    }).then((result) => {
-      var info = result.data.data.locationById
-      country = info[0]
-      city = info[1]
-           
-    }).catch((e) => {
-      console.log(e)
-    });
-    return city.concat(",",country)
-  };
   getlodging() {
     axios({
       url: GraphQLURL,
@@ -87,11 +61,8 @@ class Home extends React.Component {
       let j = 0
       while (i < info.length) {
         let recive = null;
-        info[i].location_id = this.getlocation(info[i].location_id);
         if (i + 1 < info.length) {
-          info[i + 1].location_id = this.getlocation(info[i].location_id);
           if (i + 2 < info.length) {
-            info[i + 2].location_id = this.getlocation(info[i].location_id);
             recive = this.generaterow([info[i], info[i + 1], info[i + 2]]);
           } else {
             recive = this.generaterow([info[i], info[i + 1]])
@@ -111,7 +82,6 @@ class Home extends React.Component {
   };
 
   render() {
-    this.state.another.push(<p onClick={console.log("S")}>SSSSSSSSSSSS</p>)
     if (!this.state.load) {
       if (!this.state.charge) {
         this.getlodging();
