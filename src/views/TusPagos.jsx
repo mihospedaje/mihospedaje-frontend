@@ -4,6 +4,7 @@ import './css/Pago.css';
 import './css/showBill.css';
 import axios from 'axios';
 import {GraphQLURL} from '../ipgraphql'
+import { resolve } from "url";
 
 const contentStyle = {
   maxWidth: "500px",
@@ -34,7 +35,7 @@ function ShowBill (props){
                       Tales huespedes que puede tener la reserva
                       <br></br><b>Precio</b><br></br>
                       
-                      Total: {1121351}
+                      Total: {props.total}
                       
                   </div>
               </div>
@@ -45,48 +46,129 @@ function ShowBill (props){
 
   );
 }
-
-function getinfobilling(){
-  console.log('vamoooooooooooos por el get')
-  axios({
-    url: GraphQLURL,
-    method: 'post',
-    data: {
-        query: `query {
-          userById(id: 4) {
-            name
-            lastname
-          } 
-        }`
+class Bill extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      data : [],
+      dataR: [],
+      loadR: false,
+      load: false
     }
-}).then((result) => {
-    console.log(result)
-    if(result.data.data!=null){
-      /*
-      let data = this.state.profile;
-      data[0] = result.data.data.userById.name;
-      data[1] = result.data.data.userById.lastname;
-      data[2] = result.data.data.userById.birthdate.substring(0, 10);;
-      data[3] = result.data.data.userById.email;
-      data[4] = "assets/img/2.jpg";
-      //"assets/img/".concat("2",".jpg");
-      this.setState({ profile:data, load:true});
-    //this.notify(["success","Registro Exitoso"]);
-    //window.location.pathname = '/mh/login'
-    */
-    }else{
-        //this.notify(["danger","Registro Fallido"]);    
-    }
+    this.getPaymentById = this.getPaymentById.bind(this);
+  }
+  getPaymentById(){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `query {
+            paymentById (user_id: ${localStorage.UsrID}) {
+              reservation_id
+              amount
+            } 
+          }`
+      }
+  }).then((result) => {
+      console.log(result)
+      if(result.data.data!=null){
+        let data = [];
+        data = result.data.data.paymentById;
+        console.log(data[0].amount)
+        console.log(data[1].amount)
+        this.setState ({data: data, load: true})
+      }else{
+          //this.notify(["danger","Registro Fallido"]);    
+      }
+  
+  }).catch((e) =>{
+      console.log(e);
+      //this.notify(["danger","Registro Fallido"]);  
+      
+  });
+  }//getInfo
+  getReservationById(id){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `query {
+            reservationById (id: ${id}) {
+              guest_adult_number
+              guest_children_number
+              start_date
+              end_date
+            } 
+          }`
+      }
+    }).then((result) => {
+      console.log(result)
+      if(result.data.data!=null){
+        let data = [];
+        data = result.data.data.reservationById;
+        console.log(data[0].guest_adult_number)
+        console.log(data[1].guest_children_number)
+        console.log(data[2].start_date)
+        console.log(data[3].end_date)
+        this.setState ({dataR: data, loadR: true})
+      }else{
+          //this.notify(["danger","Registro Fallido"]);    
+      }
+  
+    }).catch((e) =>{
+      console.log(e);
+      //this.notify(["danger","Registro Fallido"]);  
+      
+    });
+  }
+  
+  
+  
+  
+  render(){
+    if(!this.state.load){
+      this.getPaymentById()
+      this.state.load = true
 
-}).catch((e) =>{
-    console.log(e);
-    //this.notify(["danger","Registro Fallido"]);  
+    }
+    if(this.state.load){
+      console.log('ya paseeeeeeeeee por el get')
+      var items = []
+      for (var i=0;i<this.state.data.length;i++){
+        this.getReservationById(this.state.data[i].reservation_id)
+          items.push(
+            <div class='pago'>
+              <div id='fechas'><p>
+                  Fecha inicio: {this.state.dataR[i].start_date}
+                  Fecha final: {this.state.dataR[i].end_date}
+                </p></div>
+              <div id='huespedes'><p>
+                  Adultos: {this.state.dataR[i].guest_adult_number}
+                  Niños: {this.state.dataR[i].guest_children_number}
+                </p></div>
+              <div id='total'><p>Total: {this.state.data[i].amount} </p></div>
+              <ShowBill num={i+1} total={this.state.data[i].amount}/>
+            </div>
+          )
+      }
+
+    }
     
-});
+    return (
+        <div className="content">
+          {items}
+        </div>
+    );
+
+  }
 }
 
+export default Bill;
+
+/*
 export default function Pago(){
-  getinfobilling();
+  let bi = new Bill();
+
   console.log('ya paseeeeeeeeee por el get')
   var items = []
   for (var i=0;i<10;i++){
@@ -105,4 +187,4 @@ export default function Pago(){
       </div>
   );
 }
-
+*/
