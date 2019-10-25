@@ -46,13 +46,18 @@ export default class Test extends React.Component {
       charge: false
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
+    this.updatebill = this.updatebill.bind(this);
     this.Reserva = this.Reserva.bind(this);
+    this.makepeticion = this.makepeticion.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
+    //console.log("el handle change")
+    
     let data = this.state.reservation;
-    data[parseInt(event.target.id, 10)] = event.target.reservation;
+    data[parseInt(event.target.id, 10)] = event.target.value;
     this.setState({ reservation: data });
+    //console.log(this.state.reservation)
   }
   // FOTOS
   componentWillMount() {
@@ -137,16 +142,13 @@ export default class Test extends React.Component {
     });
   };
   makepeticion() {
-    console.log("SSSS");
-    let complete = true;
-    for (let i = 0; i < 4; i++) {
-      if (this.state.reservation[i] == undefined) {
-        complete = false;
-      }
-    }
 
-    if (complete) {
-      console.log(this.state.reservation)
+    console.log("SSSS");
+    console.log(this.state.reservation);
+    
+
+    
+    //console.log(this.state.reservation)
       
       axios({
         url: GraphQLURL,
@@ -154,11 +156,11 @@ export default class Test extends React.Component {
         data: {
           query: `mutation {
             createReservation(reservation: {
-                        user_id: "${localStorage.UsrID}"
+                        user_id: ${localStorage.UsrID}
                         start_date: "${this.state.reservation[0]}"
                         end_date: "${this.state.reservation[1]}"
-                        guest_adult_number: "${this.state.reservation[2]}"
-                        guest_children_number: "${this.state.reservation[3]}"
+                        guest_adult_number: ${this.state.reservation[2]}
+                        guest_children_number: ${this.state.reservation[3]}
                         is_cancel: false                        
                         
                         }) {
@@ -168,49 +170,41 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log("salida")
-        console.log(result)
-        if (result.data.status == 200) {
+        
+        if (result.data.data!=null) {
           let a = result.data.data.createReservation.reservation_id
           //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
-          //window.location.pathname = '/mh/login'
-          this.updatebill()
+          //window.location.pathname = '/mh/home'
+          console.log(a)
+          this.updatebill(a)
         } else {
           //this.notify(["danger", "Actualización Fallida"]);
         }
 
       }).catch((e) => {
+        console.log("catch")
+        
         console.log(e)
         //this.notify(["danger", "Actualización Fallida"]);
 
       });
-    } else {
-      //this.notify(["danger", "Datos Incompletos"]);
-    }
+    
     
   };
-  updatebill() {
-    console.log("SSSS");
-    let complete = true;
-    for (let i = 0; i < 4; i++) {
-      if (this.state.reservation[i] == undefined) {
-        complete = false;
-      }
-    }
+  updatebill(a) {
 
-    if (complete) {
-      console.log(this.state.reservation)
-      
+    console.log("FFFF");
+          
       axios({
         url: GraphQLURL,
         method: 'post',
         data: {
           query: `mutation {
             createPayment(payment: {
-                        user_id: "${localStorage.UsrID}"
-                        amount: "86899"
-                        reservation_id: "${this.a}"
-                        method: "tarjeta de credito"                                 
+                        user_id: ${localStorage.UsrID}
+                        amount: 15000
+                        reservation_id: ${a}
+                        method: "master card"                                 
                         }) {
                           user_id
                         }
@@ -218,10 +212,10 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log("salida")
+        console.log("salida2")
         console.log(result)
         if (result.data.status == 200) {
-          let a = result.data.data.updateUser.id
+          let b = result.data.data.createPayment.user_id
           //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
           //window.location.pathname = '/mh/login'
 
@@ -234,9 +228,7 @@ export default class Test extends React.Component {
         //this.notify(["danger", "Actualización Fallida"]);
 
       });
-    } else {
-      //this.notify(["danger", "Datos Incompletos"]);
-    }
+    
   };
   notify = place => {
     var type = place[0];
@@ -280,7 +272,7 @@ export default class Test extends React.Component {
               <Input id="1"  type="date" onChange={this.handleChange}/>
               
               <br></br><b>Número de huéspdes adultos</b><br></br>
-              <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
+              <Input id="2" placeholder="1-16" type="text"  onChange={this.handleChange}/>
 
               <br></br><b>Número de huéspdes niños</b><br></br>
               <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
