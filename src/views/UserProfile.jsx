@@ -78,22 +78,23 @@ class UserProfile extends React.Component {
       }).then((result) => {
         console.log("salida")
         console.log(result)
-        if (result.data.status == 200) {
+        if (result.data.data!=null) {
+          console.log("verdadero pa")
           let a = result.data.data.updateUser.id
-          //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
-          //window.location.pathname = '/mh/login'
+          this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
+          window.location.pathname = '/mh/profile'
 
         } else {
-          //this.notify(["danger", "Actualización Fallida"]);
+          this.notify(["danger", "Actualización Fallida"]);
         }
 
       }).catch((e) => {
         console.log(e)
-        //this.notify(["danger", "Actualización Fallida"]);
+        this.notify(["danger", "Actualización Fallida"]);
 
       });
     } else {
-      //this.notify(["danger", "Datos Incompletos"]);
+      this.notify(["danger", "Datos Incompletos"]);
     }
   };
   notify = place => {
@@ -200,14 +201,17 @@ class UserProfile extends React.Component {
         this.setState({ charge: true });
       }
       return (<>
-        <div className="content"></div>
-        <div className="react-notification-alert-container">
-            <NotificationAlert ref="notificationAlert" /></div>
+        <div className="content">
+          
+        </div>
+        
       </>)
     } else {
       return (
         <>
           <div className="content">
+          <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" /></div>
             <Row>
               <Col md="4">
                 <Card className="card-user">
@@ -220,7 +224,7 @@ class UserProfile extends React.Component {
                       image="https://www.emprenderalia.com/wp-content/uploads/tipo-de-persona-emprendedor-1152x768.jpg"
                       title="hospedaje"
                       style={{ height: 360 }}
-                      onClick={() => this.gotolodging()}
+                      
                     />
                   </CardBody>
                 </Card>

@@ -4,9 +4,30 @@ import { GraphQLURL } from '../ipgraphql'
 import ItemsCarousel from 'react-items-carousel';
 import range from 'lodash/range';
 import CardMedia from '@material-ui/core/CardMedia';
-import { Row, Col, Card, CardBody, CardHeader, CardTitle, Button } from "reactstrap";
+import Popup from "reactjs-popup";
+import NotificationAlert from "react-notification-alert";
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+
+
+// reactstrap components
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardText, CardTitle,
+  Row,
+  Col,
+  Button,
+  Input
+} from "reactstrap";
+
 import HomeIcon from '@material-ui/icons/Home';
 import WifiIcon from '@material-ui/icons/Wifi';
 import TvIcon from '@material-ui/icons/Tv';
@@ -20,10 +41,18 @@ export default class Test extends React.Component {
     super(props);
     this.state = {
       lodging: [],
+      reservation: [],
       load: false,
       charge: false
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
+    this.Reserva = this.Reserva.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(event) {
+    let data = this.state.reservation;
+    data[parseInt(event.target.id, 10)] = event.target.reservation;
+    this.setState({ reservation: data });
   }
   // FOTOS
   componentWillMount() {
@@ -106,6 +135,166 @@ export default class Test extends React.Component {
       console.log(e)
       //return "city.concat(",",country)"
     });
+  };
+  makepeticion() {
+    console.log("SSSS");
+    let complete = true;
+    for (let i = 0; i < 4; i++) {
+      if (this.state.reservation[i] == undefined) {
+        complete = false;
+      }
+    }
+
+    if (complete) {
+      console.log(this.state.reservation)
+      
+      axios({
+        url: GraphQLURL,
+        method: 'post',
+        data: {
+          query: `mutation {
+            createReservation(reservation: {
+                        user_id: "${localStorage.UsrID}"
+                        start_date: "${this.state.reservation[0]}"
+                        end_date: "${this.state.reservation[1]}"
+                        guest_adult_number: "${this.state.reservation[2]}"
+                        guest_children_number: "${this.state.reservation[3]}"
+                        is_cancel: false                        
+                        
+                        }) {
+                          reservation_id
+                        }
+                    }
+                    `
+        }
+      }).then((result) => {
+        console.log("salida")
+        console.log(result)
+        if (result.data.status == 200) {
+          let a = result.data.data.createReservation.reservation_id
+          //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
+          //window.location.pathname = '/mh/login'
+          this.updatebill()
+        } else {
+          //this.notify(["danger", "Actualización Fallida"]);
+        }
+
+      }).catch((e) => {
+        console.log(e)
+        //this.notify(["danger", "Actualización Fallida"]);
+
+      });
+    } else {
+      //this.notify(["danger", "Datos Incompletos"]);
+    }
+    
+  };
+  updatebill() {
+    console.log("SSSS");
+    let complete = true;
+    for (let i = 0; i < 4; i++) {
+      if (this.state.reservation[i] == undefined) {
+        complete = false;
+      }
+    }
+
+    if (complete) {
+      console.log(this.state.reservation)
+      
+      axios({
+        url: GraphQLURL,
+        method: 'post',
+        data: {
+          query: `mutation {
+            createPayment(payment: {
+                        user_id: "${localStorage.UsrID}"
+                        amount: "86899"
+                        reservation_id: "${this.a}"
+                        method: "tarjeta de credito"                                 
+                        }) {
+                          user_id
+                        }
+                    }
+                    `
+        }
+      }).then((result) => {
+        console.log("salida")
+        console.log(result)
+        if (result.data.status == 200) {
+          let a = result.data.data.updateUser.id
+          //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
+          //window.location.pathname = '/mh/login'
+
+        } else {
+          //this.notify(["danger", "Actualización Fallida"]);
+        }
+
+      }).catch((e) => {
+        console.log(e)
+        //this.notify(["danger", "Actualización Fallida"]);
+
+      });
+    } else {
+      //this.notify(["danger", "Datos Incompletos"]);
+    }
+  };
+  notify = place => {
+    var type = place[0];
+    var options = {};
+    options = {
+      place: "tc",
+      message: (
+        <div>
+          <div>
+            {place[1]}
+          </div>
+        </div>
+      ),
+      type: type,
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7
+    };
+    this.refs.notificationAlert.notificationAlert(options);
+  };
+  Reserva(props) {
+    return (
+      <Popup trigger={<Button className="btn-fill" color="primary" type="submit">Reservar</Button>}
+        modal
+        contentStyle={{
+          maxWidth: "500px",
+          width: "90%"
+        }}
+      >
+        {close => (
+          <div className="modal2">
+            <a className="close2" onClick={close}>
+              &times;
+                  </a>
+            <div className="header2"> Reservar alojamiento </div>
+            <div className="content2">
+              <br></br><b>Fecha de llegada</b><br></br>
+
+              <Input id="0"  type="date"  onChange={this.handleChange}/>
+              <br></br><b>Fecha de salida</b><br></br>
+
+              <Input id="1"  type="date" onChange={this.handleChange}/>
+              
+              <br></br><b>Número de huéspdes adultos</b><br></br>
+              <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
+
+              <br></br><b>Número de huéspdes niños</b><br></br>
+              <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
+
+              <Button className="btn-fill" color="primary" type="submit" onClick={()=>this.makepeticion()}>Hacer reserva</Button>
+
+            </div>
+          </div>
+        )}
+
+
+      </Popup>
+
+    );
   };
 
   getlodginginfo() {
@@ -364,9 +553,7 @@ export default class Test extends React.Component {
                       </Col>
                       <Col>
                       <br/>
-                      <Button className="btn-fill" color="primary" type="submit">
-                                        Reservar
-                     </Button>
+                      <this.Reserva num={3} />
                       </Col>
                       </Row>
                     </CardBody>
