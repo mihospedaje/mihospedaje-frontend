@@ -80,16 +80,16 @@ class UserProfile extends React.Component {
         console.log(result)
         if (result.data.status == 200) {
           let a = result.data.data.updateUser.id
-          //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
+          this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
           //window.location.pathname = '/mh/login'
 
         } else {
-          //this.notify(["danger", "Actualización Fallida"]);
+          this.notify(["danger", "Actualización Fallida"]);
         }
 
       }).catch((e) => {
         console.log(e)
-        //this.notify(["danger", "Actualización Fallida"]);
+         this.notify(["danger", "Actualización Fallida"]);
 
       });
     } else {
@@ -194,6 +194,7 @@ class UserProfile extends React.Component {
     });
   }
   render() {
+    console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
         this.getinfoprofile();
@@ -208,6 +209,9 @@ class UserProfile extends React.Component {
       return (
         <>
           <div className="content">
+          <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" />
+          </div>
             <Row>
               <Col md="4">
                 <Card className="card-user">
