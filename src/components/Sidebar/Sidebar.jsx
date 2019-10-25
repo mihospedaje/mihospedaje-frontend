@@ -101,12 +101,12 @@ class Sidebar extends React.Component {
             {routes.map((prop, key) => {
               //
               if(prop.name == "Hospedaje") return null;
-              if(prop.name == "Registrar Hospedaje") return null;
               if(prop.name == "Actualizar Hospedaje") return null;
               if(localStorage.Login == 1){
                 if(prop.name == "Registro") return null;
                 if(prop.name == "Iniciar Sesión") return null;
               }else{
+                if(prop.name == "Registrar Hospedaje") return null;
                 if(prop.name == "Favoritos") return null;
                 if(prop.name == "Mis Reservas") return null;
                 if(prop.name == "Mis Anuncios") return null;
