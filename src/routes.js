@@ -7,6 +7,7 @@ import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
 import Login from "views/Login.jsx";
 import Lodging from "views/Lodging.jsx";
+import LodgingCreate from "views/LodgingCreate.jsx";
 
 var routes = [
   {
@@ -88,6 +89,13 @@ var routes = [
     name: "Hospedaje",
     icon: "tim-icons icon-badge",
     component: Lodging,
+    layout: "/mh"
+  },
+  {
+    path: "/createlodging",
+    name: "CrearHospedjae",
+    icon: "tim-icons icon-badge",
+    component: LodgingCreate,
     layout: "/mh"
   },
 ];
