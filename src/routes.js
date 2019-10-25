@@ -8,6 +8,7 @@ import Register from "views/Registro.jsx";
 import Login from "views/Login.jsx";
 import Lodging from "views/Lodging.jsx";
 import LodgingCreate from "views/LodgingCreate.jsx";
+import LodgingUpdate from "views/updateLodging.jsx";
 
 var routes = [
   {
@@ -71,17 +72,17 @@ var routes = [
   },
   */
   {
-    path: "/register",
-    name: "Registro",
-    icon: "tim-icons icon-check-2",
-    component: Register,
-    layout: "/mh"
-  },
-  {
     path: "/login",
     name: "Iniciar Sesión",
     icon: "tim-icons icon-badge",
     component: Login,
+    layout: "/mh"
+  },
+  {
+    path: "/register",
+    name: "Registro",
+    icon: "tim-icons icon-check-2",
+    component: Register,
     layout: "/mh"
   },
   {
@@ -93,9 +94,16 @@ var routes = [
   },
   {
     path: "/createlodging",
-    name: "CrearHospedjae",
+    name: "Registrar Hospedaje",
     icon: "tim-icons icon-badge",
     component: LodgingCreate,
+    layout: "/mh"
+  },
+  {
+    path: "/updatelodging",
+    name: "Actualizar Hospedaje",
+    icon: "tim-icons icon-badge",
+    component: LodgingUpdate,
     layout: "/mh"
   },
 ];

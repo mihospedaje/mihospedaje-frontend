@@ -83,6 +83,7 @@ class Home extends React.Component {
   };
 
   render() {
+    console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
         this.getlodging();
