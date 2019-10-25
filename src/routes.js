@@ -12,7 +12,7 @@ var routes = [
   {
     path: "/home",
     name: "Home",
-    icon: "tim-icons icon-planet",
+    icon: "tim-icons icon-world",
     component: Home,
     layout: "/mh"
   },
