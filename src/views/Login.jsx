@@ -50,6 +50,7 @@ class Register extends React.Component {
         */
        console.log(this.state.datalogin);
        localStorage.setItem('UsrID', parseInt(this.state.datalogin[0], 10));
+       localStorage.setItem('Login', 1);
        window.location.pathname = 'mh/profile'
     };
 
@@ -82,6 +83,10 @@ class Register extends React.Component {
                                     <Button className="btn-fill" color="primary" type="submit" onClick={this.login}>
                                         Iniciar Sesion
                   </Button>
+                  
+                                </CardFooter>
+                                <CardFooter className="text-center">
+                                <label>¿No tienes una cuenta? <a href="/mh/register"> Regístrate</a></label>
                                 </CardFooter>
                             </Card>
                         </Col>

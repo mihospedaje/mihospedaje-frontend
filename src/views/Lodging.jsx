@@ -395,6 +395,11 @@ export default class Test extends React.Component {
 
     });
   }
+  update(id){
+      window.location.pathname = '/mh/updatelodging'
+      localStorage.setItem('UpdateL', parseInt(id));
+  
+  }
 
 
   render() {
@@ -546,6 +551,9 @@ export default class Test extends React.Component {
                       <Col>
                       <br/>
                       <this.Reserva num={3} />
+                      <Button className="btn-fill" color="primary" type="submit" onClick={()=>this.update(lodginginfo.lodging_id)}>
+                      Editar
+                  </Button>
                       </Col>
                       </Row>
                     </CardBody>

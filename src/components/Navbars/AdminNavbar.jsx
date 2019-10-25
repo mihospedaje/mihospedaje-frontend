@@ -66,6 +66,14 @@ class AdminNavbar extends React.Component {
       modalSearch: !this.state.modalSearch
     });
   };
+  close(){
+    localStorage.setItem('UsrID', null);
+    localStorage.setItem('Login', null);
+    localStorage.setItem('LodID', null);
+    localStorage.setItem('UpdateL', null);
+    
+    window.location.pathname = 'mh/home'
+  }
   render() {
     return (
       <>
@@ -122,7 +130,7 @@ class AdminNavbar extends React.Component {
                     <span className="d-lg-none d-md-block">Search</span>
                   </Button>
                 </InputGroup>
-                
+
                 <UncontrolledDropdown nav>
                   <DropdownToggle
                     caret
@@ -135,19 +143,34 @@ class AdminNavbar extends React.Component {
                       <img alt="..." src={require("assets/img/anime3.png")} />
                     </div>
                     <b className="caret d-none d-lg-block d-xl-block" />
-                    <p className="d-lg-none">Log out</p>
+                    
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={()=>window.location.pathname = '/mh/profile'}>Perfil</DropdownItem>
+                    {
+                      localStorage.Login != 1 ? null : (
+                        <>
+                        <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={() => window.location.pathname = '/mh/profile'}>Perfil</DropdownItem>
                     </NavLink>
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={()=>window.location.pathname = '/mh/profile'}>Editar</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={() => this.close()}>Cerrar Sesión</DropdownItem>
                     </NavLink>
-                    <DropdownItem divider tag="li" />
+                    </>
+                      )
+                    }
+                    {
+                      localStorage.Login == 1 ? null : (
+                        <>
+                        <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={() => window.location.pathname = '/mh/login'}>Login</DropdownItem>
+                    </NavLink>
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item">Salir</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={() => window.location.pathname = '/mh/register'}>Registarse</DropdownItem>
                     </NavLink>
+                    </>
+                      )
+                    }
+                    
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <li className="separator d-lg-none" />

@@ -99,8 +99,22 @@ class Sidebar extends React.Component {
           ) : null}
           <Nav>
             {routes.map((prop, key) => {
-              //if(prop.name == "Register") return null;
+              //
               if(prop.name == "Hospedaje") return null;
+              if(prop.name == "Registrar Hospedaje") return null;
+              if(prop.name == "Actualizar Hospedaje") return null;
+              if(localStorage.Login == 1){
+                if(prop.name == "Registro") return null;
+                if(prop.name == "Iniciar Sesión") return null;
+              }else{
+                if(prop.name == "Favoritos") return null;
+                if(prop.name == "Mis Reservas") return null;
+                if(prop.name == "Mis Anuncios") return null;
+                if(prop.name == "Mis Pagos") return null;
+                if(prop.name == "Perfil") return null;
+
+              }
+              
               if (prop.redirect) return null;
               return (
                 <li
