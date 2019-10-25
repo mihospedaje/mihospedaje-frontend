@@ -47,8 +47,9 @@ class CardLodging extends React.Component {
         });
       };
     
-    gotolodging(){
-        window.location.pathname = '/mh/login'
+    gotolodging(id){
+        window.location.pathname = '/mh/lodging'
+        localStorage.setItem('LodID', parseInt(id));
     }
     addtofav(){
         if(this.state.color === null){
@@ -88,11 +89,11 @@ class CardLodging extends React.Component {
                             image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
                             title="hospedaje"
                             style={{ height: 250 }}
-                            onClick={() => this.gotolodging()}
+                            onClick={() => this.gotolodging(lodginginfo.lodging_id)}
                         />
                         <CardBody >
                             <Row >
-                                <Col onClick={() => this.gotolodging()}>
+                                <Col onClick={() => this.gotolodging(lodginginfo.lodging_id)}>
                                     <p>{this.state.location}</p>
                                     <p style={{ fontSize: "180%" }} className="title">{lodginginfo.lodging_name}</p>
                                     <p>{lodginginfo.lodging_provide}</p>
