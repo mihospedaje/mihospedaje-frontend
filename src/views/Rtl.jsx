@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 //import config from '../config.js'
 
 class App extends Component {
@@ -45,7 +44,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img className="App-logo" alt="logo" />
           <h2>Elige una imagen para subir a Imgur</h2>
         </div>
         <form>

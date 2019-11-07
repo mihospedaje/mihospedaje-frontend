@@ -6,7 +6,7 @@ import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import routes from "routes.js";
-import logo from "assets/img/react-logo.png";
+import logo from "assets/img/mihospedaje.png";
 
 var ps;
 
@@ -94,7 +94,7 @@ class MiHospedaje extends React.Component {
             routes={routes}
             bgColor={this.state.backgroundColor}
             logo={{
-              outterLink: "https://github.com/mihospedaje",
+              innerLink: "/home",
               text: "Mi Hospedaje",
               imgSrc: logo
             }}
