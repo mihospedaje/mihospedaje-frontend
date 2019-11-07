@@ -94,7 +94,7 @@ class MiHospedaje extends React.Component {
             routes={routes}
             bgColor={this.state.backgroundColor}
             logo={{
-              outterLink: "https://github.com/mihospedaje",
+              innerLink: "/home",
               text: "Mi Hospedaje",
               imgSrc: logo
             }}
