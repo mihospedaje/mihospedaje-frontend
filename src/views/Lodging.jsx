@@ -87,6 +87,7 @@ export default class Test extends React.Component {
   changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
   // INFORMACION
   getUser(information){
+    console.log("User ",information)
     axios({
       url: GraphQLURL,
       method: 'post',
