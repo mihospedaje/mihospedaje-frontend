@@ -76,48 +76,93 @@ export default class Test extends React.Component {
     console.log("SSSS");
     let complete = true;
     for (let i = 0; i < 7; i++) {
-      if (this.state.lodging[i] == undefined) {
+      if (this.state.lodging[i] == undefined || this.state.lodging[i] == "") {
         complete = false;
       }
     }
-    for (let i = 8; i < 14; i++) {
-      if (this.state.lodging[i] == undefined) {
+    for (let i = 8; i < 12; i++) {
+      if (this.state.lodging[i] == undefined || this.state.lodging[i] == "") {
         complete = false;
+      }else{
+        this.state.lodging[i] = parseInt(this.state.lodging[i], 10)
       }
     }
-    if (this.state.lodging[20] == undefined) {
+    if (this.state.lodging[12] != undefined) {
+      if(this.state.lodging[12]!="-1"){
+        this.state.lodging[12] = parseInt(this.state.lodging[12], 10)
+      }else{
+        complete=false
+      }
+    }else{
+      complete = false
+    }
+    if (this.state.lodging[13] != undefined) {
+      if(this.state.lodging[13]!="-1"){
+        this.state.lodging[13] = parseInt(this.state.lodging[13], 10)
+      }else{
+        complete=false
+      }
+    }else{
+      complete = false
+    }
+
+    if (this.state.lodging[20] == undefined || this.state.lodging[20] == "") {
       complete = false;
     }
-    if (this.state.lodging[21] == undefined) {
+    if (this.state.lodging[21] == undefined || this.state.lodging[21] == "") {
       complete = false;
     }
     if (this.state.lodging[7] == undefined) {
       this.state.lodging[7] = ""
     }
     if (this.state.lodging[4] != undefined) {
-      this.state.lodging[4] = this.state.locationid[parseInt(this.state.lodging[4], 10)]
+      if(this.state.lodging[4]!="-1"){
+        this.state.lodging[4] = this.state.locationid[parseInt(this.state.lodging[4], 10)]
+      }else{
+        complete=false
+      }
     }
     if (this.state.lodging[2] != undefined) {
+      if(this.state.lodging[2]!="-1"){
       this.state.lodging[2] = parseInt(this.state.lodging[2], 10)
+    }else{
+      complete=false
+    }
     }
     if (this.state.lodging[3] != undefined) {
+      if(this.state.lodging[3]!="-1"){
       this.state.lodging[3] = parseInt(this.state.lodging[3], 10)
+    }else{
+      complete=false
+    }
     }
     if (this.state.lodging[5] != undefined) {
+      if (this.state.lodging[5] != "-1") {
       this.state.lodging[5] = parseInt(this.state.lodging[5], 10)
+    }else{
+      complete=false
+    }
     }
     if (this.state.lodging[12] != undefined) {
+      if (this.state.lodging[12] != "-1") {
       this.state.lodging[12] = parseInt(this.state.lodging[12], 10)
+    }else{
+      complete=false
+    }
     }
     if (this.state.lodging[13] != undefined) {
+      if (this.state.lodging[13] != "-1") {
       this.state.lodging[13] = parseInt(this.state.lodging[13], 10)
+    }else{
+      complete=false
+    }
     }
     for (let i = 14; i < 20; i++) {
       if (this.state.lodging[i] == undefined) {
         this.state.lodging[i] = 0
       }
     }
-
+    console.log(this.state.lodging)
     if (complete) {
       axios({
         url: GraphQLURL,
@@ -204,7 +249,7 @@ export default class Test extends React.Component {
       if (!this.state.charge) {
         let horas = this.state.hourframe;
         for(let i = 0; i<16;i++){
-          horas[i+7] = i+7;
+          horas[i] = i+7;
         }
         this.getlocation();
         this.setState({ charge: true , hourframe: horas });
@@ -264,7 +309,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>Tipo de Alojamiento</label>
                             <Input id="2" placeholder="Nombre" type="select" onChange={this.handleChange}>
-                              <option defaultValue>Seleccione una Opcion</option>
+                              <option value = "-1" defaultValue>Seleccione una Opcion</option>
                               <option value="1">Departamento</option>
                               <option value="2">Casa</option>
                               <option value="3">Vivienda Anexa</option>
@@ -276,7 +321,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>¿De qué dispondrán los huéspedes?</label>
                             <Input id="3" placeholder="Teléfono" type="select" onChange={this.handleChange}>
-                              <option defaultValue>Seleccione una Opcion</option>
+                              <option value = "-1" defaultValue>Seleccione una Opcion</option>
                               <option value="1">Alojamiento Entero</option>
                               <option value="2">Habitación Privada</option>
                               <option value="3">Habitación Compartida</option>
@@ -289,7 +334,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>Ubicación</label>
                             <Input id="4" placeholder="Nombre" type="select" onChange={this.handleChange}>
-                              <option defaultValue>Seleccione una Opcion</option>
+                              <option value = "-1" defaultValue>Seleccione una Opcion</option>
                               {this.state.location.map((prop, key) => {
                                 return (<option key={key} value={key} >{prop}</option>)
                               })
@@ -302,7 +347,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>¿El espacio es único para alojamiento</label>
                             <Input id="5" placeholder="Nombre" type="select" onChange={this.handleChange}>
-                              <option defaultValue>Seleccione una Opcion</option>
+                              <option value = "-1" defaultValue>Seleccione una Opcion</option>
                               <option value="1">Sí, está pensado para los huéspedes</option>
                               <option value="0">No, aquí tengo mis pertenencias</option>
                             </Input>
@@ -363,7 +408,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>Desde</label>
                             <Input id="12" type="select" onChange={this.handleChange}>
-                            <option defaultValue>Seleccione una Opcion</option>
+                            <option value = "-1" defaultValue>Seleccione una Opcion</option>
                             <option value = "0" >Flexible</option>
                               {this.state.hourframe.map((prop, key) => {
                                 return (<option key={key} value={key+1} >{prop}:00</option>)
@@ -376,7 +421,7 @@ export default class Test extends React.Component {
                           <FormGroup>
                             <label>Hasta</label>
                             <Input id="13" type="select" onChange={this.handleChange}>
-                            <option defaultValue>Seleccione una Opcion</option>
+                            <option value = "-1" defaultValue>Seleccione una Opcion</option>
                             <option value = "0" >Flexible</option>
                               {this.state.hourframe.map((prop, key) => {
                                 return (<option key={key} value={key+1} >{prop+1}:00</option>)
