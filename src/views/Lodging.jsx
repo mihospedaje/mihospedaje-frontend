@@ -5,29 +5,9 @@ import ItemsCarousel from 'react-items-carousel';
 import range from 'lodash/range';
 import CardMedia from '@material-ui/core/CardMedia';
 import Popup from "reactjs-popup";
-import NotificationAlert from "react-notification-alert";
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-
-
-// reactstrap components
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardText, CardTitle,
-  Row,
-  Col,
-  Button,
-  Input
-} from "reactstrap";
-
+import { Card, CardHeader, CardBody, CardTitle, Row, Col, Button, Input } from "reactstrap";
 import HomeIcon from '@material-ui/icons/Home';
 import WifiIcon from '@material-ui/icons/Wifi';
 import TvIcon from '@material-ui/icons/Tv';
@@ -43,7 +23,9 @@ export default class Test extends React.Component {
       lodging: [],
       reservation: [],
       load: false,
-      charge: false
+      charge: false,
+      id: null,
+      host_id: null
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
     this.updatebill = this.updatebill.bind(this);
@@ -52,12 +34,9 @@ export default class Test extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
-    //console.log("el handle change")
-    
     let data = this.state.reservation;
     data[parseInt(event.target.id, 10)] = event.target.value;
     this.setState({ reservation: data });
-    //console.log(this.state.reservation)
   }
   // FOTOS
   componentWillMount() {
@@ -101,8 +80,9 @@ export default class Test extends React.Component {
       }
   }).then((result) => {
       if(result.data.data!=null){
+        let a = information.host_id
         information.host_id = result.data.data.userById.name
-        this.setState({ lodging: information, load: true });
+        this.setState({ lodging: information, load: true, host_id: a });
       
       }else{
  
@@ -249,7 +229,8 @@ export default class Test extends React.Component {
     };
     this.refs.notificationAlert.notificationAlert(options);
   };
-  Reserva(props) {
+  Reserva() {
+    if(this.state.id !=null){
     return (
       <Popup trigger={<Button className="btn-fill" color="primary" type="submit">Reservar</Button>}
         modal
@@ -288,6 +269,9 @@ export default class Test extends React.Component {
       </Popup>
 
     );
+        }else{
+          window.location.pathname = '/mh/login'
+        }
   };
 
   getlodginginfo() {
@@ -296,7 +280,7 @@ export default class Test extends React.Component {
       method: 'post',
       data: {
         query: `query{
-            lodgingById(id:${localStorage.LodID}){
+            lodgingById(id:${localStorage.View_Lodging}){
               lodging_id
               lodging_name
               lodging_type
@@ -320,7 +304,6 @@ export default class Test extends React.Component {
           }`
       }
     }).then((result) => {
-      localStorage.setItem('LodID', null);
       console.log(result)
       if (result.data.data != null) {
         let info = result.data.data.lodgingById;
@@ -398,8 +381,63 @@ export default class Test extends React.Component {
   }
   update(id){
       window.location.pathname = '/mh/updatelodging'
-      localStorage.setItem('UpdateL', parseInt(id));
+      localStorage.setItem('Update_Lodging', parseInt(id));
   
+  }
+  getid(email) {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query{
+          userByEmail(email:${email}){
+            id
+          }
+        }`
+      }
+    }).then((result) => {
+      if(result.data.data != null){
+        this.setState({id:result.data.data.userByEmail.id});
+        console.log(this.state.id);
+        this.getlodginginfo();
+      }
+    }).catch((e) => {
+    });
+  }
+  validatetoken() {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation{
+          validate(credentials:{
+            token:"${localStorage.jwt}" 
+          }){
+            message
+          }
+        }`
+      }
+    }).then((result) => {
+      if (result.data.data.validate.message === "Token Valido") {
+        var jwt = require("jsonwebtoken");
+        var decoded = jwt.decode(localStorage.jwt);
+        var email = (decoded.body.split(",")[0]).split(":")[1];
+        console.log(email);
+        this.getid(email);
+      } else {
+        localStorage.setItem('View_User', "");
+        localStorage.setItem('View_Lodging', "");
+        localStorage.setItem('jwt', "");
+        localStorage.setItem('IsLogged', false);
+        window.location.pathname = 'mh/login'
+      }
+    }).catch((e) => {
+      localStorage.setItem('View_User', "");
+      localStorage.setItem('View_Lodging', "");
+      localStorage.setItem('jwt', "");
+      localStorage.setItem('IsLogged', false);
+      window.location.pathname = 'mh/login'
+    });
   }
 
 
@@ -410,7 +448,12 @@ export default class Test extends React.Component {
     } = this.state;
     if (!this.state.load) {
       if (!this.state.charge) {
-        this.getlodginginfo();
+        console.log(localStorage.IsLogged)
+        if(localStorage.IsLogged  == "true" ){
+          this.validatetoken();
+        }else{
+          this.getlodginginfo();
+        }
         this.setState({ charge: true });
       }
       return (<>
@@ -418,6 +461,9 @@ export default class Test extends React.Component {
       </>)
     } else {
       let lodginginfo = this.state.lodging;
+      console.log(this.state.host_id)
+      console.log(this.state.id)
+      console.log(lodginginfo.host_id===this.state.id)
       return (
         <>
           <div className="content">
@@ -436,7 +482,6 @@ export default class Test extends React.Component {
                       showSlither={true}
                       firstAndLastGutter={true}
                       freeScrolling={false}
-
                       // Active item configurations
                       requestToChangeActive={this.changeActiveItem}
                       activeItemIndex={activeItemIndex}
@@ -551,10 +596,19 @@ export default class Test extends React.Component {
                       </Col>
                       <Col>
                       <br/>
-                      <this.Reserva num={3} />
-                      <Button className="btn-fill" color="primary" type="submit" onClick={()=>this.update(lodginginfo.lodging_id)}>
-                      Editar
-                  </Button>
+                      {
+                          this.state.host_id  == this.state.id ? null : (
+                            <this.Reserva/>
+                          )
+                       }
+                      {
+                          this.state.host_id  != this.state.id ? null : (
+                            <Button className="btn-fill" color="primary" type="submit" onClick={()=>this.update(lodginginfo.lodging_id)}>
+                           Editar
+                          </Button>
+                          )
+                       }
+                      
                       </Col>
                       </Row>
                     </CardBody>

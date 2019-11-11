@@ -78,7 +78,7 @@ export default class Test extends React.Component {
         method: 'post',
         data: {
           query: `query{
-            lodgingById(id:${localStorage.UpdateL}){
+            lodgingById(id:${localStorage.Update_Lodging}){
               host_id
               lodging_name
               phone_number
@@ -110,7 +110,7 @@ export default class Test extends React.Component {
           } `
         }
       }).then((result) => {
-        localStorage.setItem('UpdateL', null);
+        localStorage.setItem('Update_Lodging', null);
         console.log(result)
         if (result.data.data != null) {
             console.log(this.state.locationid)
@@ -244,7 +244,7 @@ export default class Test extends React.Component {
         if (result.data.data != null) {
           let a = result.data.data.updateLodging.lodging_id
           this.notify(["success", "Actualización exitosa de id: ".concat(a)]);
-          localStorage.setItem('LodID', parseInt(a));
+          localStorage.setItem('View_Lodging', parseInt(a));
           window.location.pathname = '/mh/lodging'
 
         } else {
@@ -280,8 +280,8 @@ export default class Test extends React.Component {
   };
 
   cancel(id){
-    localStorage.setItem('UpdateL', null);
-    localStorage.setItem('LodID', parseInt(id));
+    localStorage.setItem('Update_Lodging', null);
+    localStorage.setItem('View_Lodging', parseInt(id));
     window.location.pathname = '/mh/lodging'
   }
 

@@ -1,5 +1,7 @@
 import React from "react";
 import axios from 'axios';
+import { GraphQLURL } from '../ipgraphql';
+import NotificationAlert from "react-notification-alert";
 // reactstrap components
 import {
     Card, CardHeader, CardBody, CardTitle, Row, Col, FormGroup,
@@ -9,7 +11,7 @@ import {
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {datalogin: ['']};
+        this.state = {datalogin: []};
     
         this.handleChange = this.handleChange.bind(this);
         this.login = this.login.bind(this);
@@ -20,44 +22,68 @@ class Register extends React.Component {
         this.setState({ datalogin:data});
         console.log(this.state.datalogin);
       }
+      notify = place => {
+        var type = place[0];
+        var options = {};
+        options = {
+          place: "tc",
+          message: (
+            <div>
+              <div>
+                {place[1]}
+              </div>
+            </div>
+          ),
+          type: type,
+          icon: "tim-icons icon-bell-55",
+          autoDismiss: 7
+        };
+        this.refs.notificationAlert.notificationAlert(options);
+      };
 
 
     login(){
-        /*
         axios({
-            url: 'http://3.132.9.148:5000/graphql',
+            url: GraphQLURL,
             method: 'post',
             data: {
-                query: `mutation {
-                            createUser(user: {
-                            name: "${this.state.register[0]}"
-                            lastname: "${this.state.register[1]}"
-                            birthdate: "${this.state.register[4]}"
-                            email: "${this.state.register[2]}"
-                            password: "${this.state.register[3]}"
-                            idrole:1
-                            }) {
-                            name
-                            }
-                        }
+              query: `mutation{
+                loginUser(credentials:{
+                  email: "${this.state.datalogin[0]}"
+                  password: "${this.state.datalogin[1]}"
+                }){
+                  success
+                  token
+                }
+              }
                         `
             }
-        }).then((result) => {
-            console.log(result.data.data.allUsers)
-        }).catch((e) =>{
+          }).then((result) => {
+            var info = result.data.data.loginUser
+            if(info.success == true){
+                localStorage.setItem('jwt', info.token);
+                localStorage.setItem('IsLogged', true);
+                window.location.pathname = 'mh/profile'
+
+            }else{
+                this.notify(["danger", "Usuario o Contraseña Incorrectos"]);
+            }
+            
+          }).catch((e) => {
             console.log(e)
-        });
-        */
-       console.log(this.state.datalogin);
-       localStorage.setItem('UsrID', parseInt(this.state.datalogin[0], 10));
-       localStorage.setItem('Login', 1);
-       window.location.pathname = 'mh/profile'
+            this.notify(["danger", "Usuario o Contraseña Incorrectos"]);
+    
+          });
+       
     };
 
     render() {
         return (
             <>
                 <div className="content">
+                <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" />
+          </div>
                     <Row className="justify-content-center">
                         <Col md="5">
                             <Card >

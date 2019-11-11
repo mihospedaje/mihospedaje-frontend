@@ -48,8 +48,8 @@ class CardLodging extends React.Component {
       };
     
     gotolodging(id){
+        localStorage.setItem('View_Lodging', parseInt(id));
         window.location.pathname = '/mh/lodging'
-        localStorage.setItem('LodID', parseInt(id));
     }
     addtofav(){
         if(this.state.color === null){

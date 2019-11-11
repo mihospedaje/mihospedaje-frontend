@@ -68,12 +68,16 @@ class AdminNavbar extends React.Component {
   };
   close(){
     localStorage.setItem('UsrID', null);
-    localStorage.setItem('Login', null);
+    localStorage.setItem('IsLogged', false);
     localStorage.setItem('LodID', null);
     localStorage.setItem('UpdateL', null);
-    
     window.location.pathname = 'mh/home'
   }
+  profile(){
+    localStorage.setItem('View_User', "");
+    window.location.pathname = '/mh/profile'
+  }
+
   render() {
     return (
       <>
@@ -147,10 +151,10 @@ class AdminNavbar extends React.Component {
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
                     {
-                      localStorage.Login != 1 ? null : (
+                      localStorage.IsLogged != "true" ? null : (
                         <>
                         <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={() => window.location.pathname = '/mh/profile'}>Perfil</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={() => this.profile()}>Perfil</DropdownItem>
                     </NavLink>
                     <NavLink tag="li">
                       <DropdownItem className="nav-item" onClick={() => this.close()}>Cerrar Sesión</DropdownItem>
@@ -159,7 +163,7 @@ class AdminNavbar extends React.Component {
                       )
                     }
                     {
-                      localStorage.Login == 1 ? null : (
+                      localStorage.IsLogged == "true" ? null : (
                         <>
                         <NavLink tag="li">
                       <DropdownItem className="nav-item" onClick={() => window.location.pathname = '/mh/login'}>Login</DropdownItem>
