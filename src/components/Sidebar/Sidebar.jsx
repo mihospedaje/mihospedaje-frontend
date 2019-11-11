@@ -15,7 +15,13 @@ var ps;
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      load: false,
+      charge: false,
+      login: false
+    };
     this.activeRoute.bind(this);
+    this.validatetoken.bind(this);
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
@@ -37,6 +43,27 @@ class Sidebar extends React.Component {
   linkOnClick = () => {
     document.documentElement.classList.remove("nav-open");
   };
+
+  validatetoken() {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation{
+          validate(credentials:{
+            token:"${localStorage.jwt}" 
+          }){
+            message
+          }
+        }`
+      }
+    }).then((result) => {
+      if (result.data.data.validate.message === "Token Valido") {
+        this.setState({ login: true, load: true});
+      } 
+    }).catch((e) => {
+    });
+  }
   render() {
     const { bgColor, routes, rtlActive, logo } = this.props;
     let logoImg = null;
@@ -102,7 +129,7 @@ class Sidebar extends React.Component {
               //
               if(prop.name == "Hospedaje") return null;
               if(prop.name == "Actualizar Hospedaje") return null;
-              if(localStorage.Login == 1){
+              if(localStorage.IsLogged === "true"){
                 if(prop.name == "Registro") return null;
                 if(prop.name == "Iniciar Sesión") return null;
               }else{
@@ -139,8 +166,10 @@ class Sidebar extends React.Component {
           </Nav>
         </div>
       </div>
+    
     );
-  }
+          }
+  
 }
 
 Sidebar.defaultProps = {

@@ -14,7 +14,8 @@ export default class Test extends React.Component {
       charge: false,
       location: [],
       locationid: [],
-      hourframe:[]
+      hourframe:[],
+      id : null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
@@ -170,7 +171,7 @@ export default class Test extends React.Component {
         data: {
           query: `mutation{
   createLodging(lodging:{
-    host_id: ${localStorage.UsrID}
+    host_id: ${this.state.id}
     lodging_name: "${this.state.lodging[0]}"
     phone_number: ${this.state.lodging[1]}
     lodging_type: ${this.state.lodging[2]}
@@ -241,7 +242,61 @@ export default class Test extends React.Component {
     };
     this.refs.notificationAlert.notificationAlert(options);
   };
-
+  getid(email) {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query{
+          userByEmail(email:${email}){
+            id
+          }
+        }`
+      }
+    }).then((result) => {
+      if(result.data.data != null){
+        this.setState({id:result.data.data.userByEmail.id});
+        console.log(this.state.id);
+        this.getlocation();
+      }
+    }).catch((e) => {
+    });
+  }
+  validatetoken() {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation{
+          validate(credentials:{
+            token:"${localStorage.jwt}" 
+          }){
+            message
+          }
+        }`
+      }
+    }).then((result) => {
+      if (result.data.data.validate.message === "Token Valido") {
+        var jwt = require("jsonwebtoken");
+        var decoded = jwt.decode(localStorage.jwt);
+        var email = (decoded.body.split(",")[0]).split(":")[1];
+        console.log(email);
+        this.getid(email);
+      } else {
+        localStorage.setItem('View_User', "");
+        localStorage.setItem('View_Lodging', "");
+        localStorage.setItem('jwt', "");
+        localStorage.setItem('IsLogged', false);
+        window.location.pathname = 'mh/login'
+      }
+    }).catch((e) => {
+      localStorage.setItem('View_User', "");
+      localStorage.setItem('View_Lodging', "");
+      localStorage.setItem('jwt', "");
+      localStorage.setItem('IsLogged', false);
+      window.location.pathname = 'mh/login'
+    });
+  }
 
   render() {
     console.log(localStorage)
@@ -251,7 +306,7 @@ export default class Test extends React.Component {
         for(let i = 0; i<16;i++){
           horas[i] = i+7;
         }
-        this.getlocation();
+        this.validatetoken();
         this.setState({ charge: true , hourframe: horas });
       }
       return (<>

@@ -15,13 +15,42 @@ class Register extends React.Component {
         this.state = {register: []};
         this.handleChange = this.handleChange.bind(this);
         this.makepeticion = this.makepeticion.bind(this);
+        this.createuserldap = this.createuserldap.bind(this);
+        
     }
     handleChange(event) {
         let data = this.state.register;
         data[parseInt(event.target.id, 10)] = event.target.value;
         this.setState({ register:data });
       }
-
+    
+    createuserldap(){
+        axios({
+            url: GraphQLURL,
+            method: 'post',
+            data: {
+              query: `mutation{
+                createUserld(user:{
+                  email: "${this.state.register[2]}"
+                  password: "${this.state.register[3]}"
+                }){
+                  success
+                }
+              }`
+            }
+          }).then((result) => {
+            console.log(result)
+            if(result.data.data.createUserld.success === "true"){
+              window.location.pathname = '/mh/login'
+              console.log("LDAP creado")
+            }else{
+              console.log("LDAP no creado")
+            }
+      
+          }).catch((e) => {
+     
+          });
+    }
 
     makepeticion(){
         console.log("SSSS");
@@ -45,6 +74,7 @@ class Register extends React.Component {
                             email: "${this.state.register[2]}"
                             password: "${this.state.register[3]}"
                             idrole:1
+                            image: ""
                             }) {
                             id
                             }
@@ -54,10 +84,8 @@ class Register extends React.Component {
         }).then((result) => {
             console.log(result)
             if(result.data.data!=null){
-                let a = result.data.data.createUser.id
-                this.notify(["success","Registro Exitoso con id: ".concat(a)]);
-                //window.location.pathname = '/mh/login'
-            
+                this.notify(["success","Registro Exitoso"]);
+                this.createuserldap();
             }else{
                 this.notify(["danger","Registro Fallido"]);    
             }

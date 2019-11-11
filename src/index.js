@@ -12,7 +12,12 @@ import "assets/css/nucleo-icons.css";
 
 const hist = createBrowserHistory();
 document.body.classList.add("white-content");
+//localStorage.setItem('View_User', "");
+//localStorage.setItem('View_Lodging', "");
+//localStorage.setItem('jwt', "");
+
 ReactDOM.render(
+  
 
   <Router history={hist}>
     <Switch>
