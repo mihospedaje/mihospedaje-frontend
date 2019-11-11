@@ -5,10 +5,6 @@ import axios from 'axios';
 import {GraphQLURL} from '../ipgraphql'
 import Pago from './pago';
 
-
-
-
-
 class Bill extends React.Component{
   constructor(props){
     super(props)
@@ -16,6 +12,7 @@ class Bill extends React.Component{
       data : [],
       charge: false,
       load: false
+      
     }
     this.getPaymentById = this.getPaymentById.bind(this);
   }
@@ -32,6 +29,7 @@ class Bill extends React.Component{
           }`
       }
   }).then((result) => {
+    
       console.log(result)
       if(result.data.data!=null){
         let data = [];
@@ -65,13 +63,15 @@ class Bill extends React.Component{
       <div className="content"></div>
       </>)
     }else{
+      
       return (
         <div className="content">
           {this.state.data.map((prop,key)=> {
             return (
-              <Pago key={key} info={prop}/>
+              <Pago key={key} info={prop}  />
+              
             )
-
+            
           } )}
 
 

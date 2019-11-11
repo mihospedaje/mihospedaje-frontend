@@ -3,13 +3,13 @@
     width: relative;
     max-width: relative;
 	min-height: 80px;
-    margin: 25px;
-    padding: auto;
+    margin: 15px;
     border-color: rgb(99, 14, 96);
     border-width: medium;
     border-style: solid;
     border-left: none;
     border-right: none;
+    
 }
 #fechas{
     min-height: 60px;
@@ -18,7 +18,7 @@
     height: relative;
     display: inline-block;
     padding-top: 30px;
-    margin-right: 20%;
+    margin-right: 25%;
 }
 #huespedes{
     min-height: 80px;
@@ -27,7 +27,7 @@
     width: relative;
     height: relative;
     padding-top: 30px;
-    margin-right: 20%;
+    margin-right: 25%;
     
 }
 #total{
@@ -37,6 +37,6 @@
     height: relative;
     padding-top: 30px;
     display: inline-block;
-    margin-right: 20%;
+    margin-right: 10%;
     
 }
