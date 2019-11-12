@@ -202,7 +202,7 @@ export default class Test extends React.Component {
       }).then((result) => {
         if (result.data.data != null) {
           let a = result.data.data.createLodging.lodging_id
-          this.notify(["success", "Registro Exitoso con id: ".concat(a)]);
+          this.notify(["success", "Registro Exitoso"]);
           localStorage.setItem('LodID', parseInt(a));
           window.location.pathname = '/mh/lodging'
 

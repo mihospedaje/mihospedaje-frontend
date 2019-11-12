@@ -14,7 +14,7 @@ import { Card, Row, Col, CardBody } from "reactstrap";
 class CardLodging extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {color: null, load: false, charge:false, location:"" };
+        this.state = {color: null, load: false, charge:false, location:"", lodging:""};
         this.addtofav = this.addtofav.bind(this);
         this.getlocation = this.getlocation.bind(this);
     }
@@ -45,6 +45,31 @@ class CardLodging extends React.Component {
         });
       };
     
+      getlodging(id) {
+        axios({
+          url: GraphQLURL,
+          method: 'post',
+          data: {
+            query: `query {
+                lodgingById(id:${id}) {
+                              lodging_id
+                              lodging_name
+                              location_id
+                              price_per_person_and_nigth
+                              lodging_provide
+                          }
+                        }
+                        `
+          }
+        }).then((result) => {
+          var info = result.data.data.lodgingById
+          console.log(info)
+          this.setState({ load: true , lodging:info});
+        }).catch((e) => {
+          console.log(e);
+        });
+      };
+    
     gotolodging(id){
         localStorage.setItem('View_Lodging', parseInt(id));
         window.location.pathname = '/mh/lodging'
@@ -57,6 +82,7 @@ class CardLodging extends React.Component {
         }
     }
     render() {
+        if(this.props.reserva===null){
         var lodginginfo = this.props.lodinfo;
         var reserinfo = this.props.reserva
         switch (lodginginfo.lodging_provide) {
@@ -71,16 +97,37 @@ class CardLodging extends React.Component {
                 break;
             default:
                 break;
+        }}else{
+           var reservationinfo = this.props.reserva;
+           var lodginginfo = this.state.lodging;
+           switch (lodginginfo.lodging_provide) {
+            case 1:
+                lodginginfo.lodging_provide = "Alojamiento Entero"
+                break;
+            case 2:
+                lodginginfo.lodging_provide = "Habitación Privada"
+                break;
+            case 3:
+                lodginginfo.lodging_provide = "Habitación Compartida"
+                break;
+            default:
+                break;
+        }
         }
         if (!this.state.load) {
             if (!this.state.charge) {
+                if(this.props.reserva===null){
               this.getlocation(lodginginfo.location_id);
+                }else{
+                    this.getlodging(reservationinfo.lodging_id);
+                }
               this.setState({ charge: true });
             }
             return (<>
               <div className="content"></div>
             </>)
           } else {
+              console.log(reservationinfo);
         return (
             <>
                 <Card >
@@ -105,9 +152,9 @@ class CardLodging extends React.Component {
                                     {
                                         this.props.reserva == null ? null : (
                                             <div>
-                                                <p>{reserinfo.fechast} -> {reserinfo.fechaend}</p>
-                                                <p>Huéspedes:{reserinfo.adults} Adulto(s), {reserinfo.children} Niño(s)</p>
-                                                <p>Total: ${reserinfo.total} COP</p>
+                                                <p>{reservationinfo.start_date.substring(0, 10)} -> {reservationinfo.start_date.substring(0, 10)}</p>
+                                                <p>Huéspedes:{reservationinfo.guest_adult_number} Adulto(s), {reservationinfo.guest_children_number} Niño(s)</p>
+                                                <p>Total: $15000 COP</p>
                                             </div>
                                         )
                                     }

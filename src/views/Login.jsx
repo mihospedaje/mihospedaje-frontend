@@ -106,7 +106,7 @@ class Register extends React.Component {
                                 </CardBody>
                                 <CardFooter className="text-center">
                                     <Button className="btn-fill" color="primary" type="submit" onClick={this.login}>
-                                        Iniciar Sesion
+                                        Iniciar Sesión
                   </Button>
                   
                                 </CardFooter>

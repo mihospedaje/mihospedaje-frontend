@@ -6,6 +6,8 @@ import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
 import Login from "views/Login.jsx";
 import Lodging from "views/Lodging.jsx";
+import MyLodging from "views/MyLodging.jsx";
+import MyReservation from "views/MyReservation.jsx";
 import LodgingCreate from "views/LodgingCreate.jsx";
 import LodgingUpdate from "views/updateLodging.jsx";
 
@@ -17,6 +19,7 @@ var routes = [
     component: Home,
     layout: "/mh"
   },
+  /*
   {
     path: "/favorites",
     name: "Favoritos",
@@ -24,18 +27,20 @@ var routes = [
     component: Home,
     layout: "/mh"
   },
+  */
   {
     path: "/reservations",
     name: "Mis Reservas",
     icon: "tim-icons icon-calendar-60",
-    component: Home,
+    component: MyReservation,
     layout: "/mh"
   },
+
   {
     path: "/anocement",
     name: "Mis Anuncios",
     icon: "tim-icons icon-single-copy-04",
-    component: Home,
+    component: MyLodging,
     layout: "/mh"
   },
   
