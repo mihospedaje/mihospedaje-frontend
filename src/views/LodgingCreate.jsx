@@ -203,7 +203,7 @@ export default class Test extends React.Component {
         if (result.data.data != null) {
           let a = result.data.data.createLodging.lodging_id
           this.notify(["success", "Registro Exitoso"]);
-          localStorage.setItem('LodID', parseInt(a));
+          localStorage.setItem('View_Lodging', parseInt(a));
           window.location.pathname = '/mh/lodging'
 
         } else {
