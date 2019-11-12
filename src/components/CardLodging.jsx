@@ -35,15 +35,13 @@ class CardLodging extends React.Component {
           }
         }).then((result) => {
           var info = result.data.data.locationById
-          console.log(info)
           country = info.country
           city = info.city
           let l = city.concat(", ",country)
           this.setState({load:true, location:l})
           
         }).catch((e) => {
-          console.log(e)
-          //return "city.concat(",",country)"
+            console.log(e);
         });
       };
     

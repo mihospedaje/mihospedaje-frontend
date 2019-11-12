@@ -67,10 +67,10 @@ class AdminNavbar extends React.Component {
     });
   };
   close(){
-    localStorage.setItem('UsrID', null);
+    localStorage.setItem('View_User', "");
+    localStorage.setItem('View_Lodging', "");
+    localStorage.setItem('jwt', "");
     localStorage.setItem('IsLogged', false);
-    localStorage.setItem('LodID', null);
-    localStorage.setItem('UpdateL', null);
     window.location.pathname = 'mh/home'
   }
   profile(){

@@ -14,7 +14,7 @@ class UserProfile extends React.Component {
       load: false,
       charge: false,
       register: [],
-      id: 0
+      view: null
     };
     this.getinfoprofile = this.getinfoprofile.bind(this);
     this.ProfileEdit = this.ProfileEdit.bind(this);
@@ -29,6 +29,35 @@ class UserProfile extends React.Component {
     this.setState({ register: data });
   }
 
+  actualizarldap(){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation {
+                      updatePassword( user: {
+                      email: "${this.state.profile[3]}"
+                      password: "${this.state.register[3]}"                        
+                      }) {
+                      data
+                      }
+                  }
+                  `
+      }
+    }).then((result) => {
+      if (result.data.data != null) {
+        this.notify(["success", "Actualización Exitosa"]);
+        window.location.pathname = '/mh/profile'
+      } else {
+        this.notify(["danger", "Actualización Fallida"]);
+      }
+
+    }).catch((e) => {
+      console.log(e)
+      this.notify(["danger", "Actualización Fallida"]);
+    });
+  }
+
 
   makepeticion() {
     let complete = true;
@@ -39,8 +68,6 @@ class UserProfile extends React.Component {
     }
 
     if (complete) {
-      console.log(this.state.register)
-      console.log(this.state.profile)
       axios({
         url: GraphQLURL,
         method: 'post',
@@ -61,19 +88,15 @@ class UserProfile extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log("salida")
-        console.log(result)
         if (result.data.data != null) {
-          console.log("verdadero pa")
           let a = result.data.data.updateUser.id
-          this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
-          window.location.pathname = '/mh/profile'
+          this.actualizarldap();
         } else {
           this.notify(["danger", "Actualización Fallida"]);
         }
 
       }).catch((e) => {
-        console.log(e)
+        console.log(e);
         this.notify(["danger", "Actualización Fallida"]);
       });
     } else {
@@ -152,7 +175,6 @@ class UserProfile extends React.Component {
            }`
       }
     }).then((result) => {
-      console.log(result)
       if (result.data.data != null) {
         let data = this.state.profile;
         data[0] = result.data.data.userById.name;
@@ -185,6 +207,7 @@ class UserProfile extends React.Component {
         this.setState({id:result.data.data.userByEmail.id});
       }
     }).catch((e) => {
+      console.log(e);
     });
   }
   validatetoken() {
@@ -214,6 +237,7 @@ class UserProfile extends React.Component {
         window.location.pathname = 'mh/login'
       }
     }).catch((e) => {
+      console.log(e);
       localStorage.setItem('View_User', "");
       localStorage.setItem('View_Lodging', "");
       localStorage.setItem('jwt', "");
@@ -227,6 +251,7 @@ class UserProfile extends React.Component {
     if (!this.state.load) {
       if (!this.state.charge) {
         if (localStorage.View_User != "") {
+          this.setState({view:true})
           this.getinfoprofile(localStorage.View_User);
           localStorage.setItem('View_User', "");
         } else {
@@ -271,7 +296,7 @@ class UserProfile extends React.Component {
                   </CardBody>
                   <CardFooter>
                   {
-                    localStorage.View_User != "" ? null : (
+                    this.state.view != null ? null : (
                     <this.ProfileEdit/>
                     )
                   }

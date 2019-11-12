@@ -39,21 +39,18 @@ class Register extends React.Component {
               }`
             }
           }).then((result) => {
-            console.log(result)
             if(result.data.data.createUserld.success === "true"){
               window.location.pathname = '/mh/login'
-              console.log("LDAP creado")
             }else{
-              console.log("LDAP no creado")
+            
             }
       
           }).catch((e) => {
-     
+            console.log(e);
           });
     }
 
     makepeticion(){
-        console.log("SSSS");
         let complete = true;
         for(let i = 0; i<5;i++){
             if(this.state.register[i]==undefined){
@@ -82,7 +79,6 @@ class Register extends React.Component {
                         `
             }
         }).then((result) => {
-            console.log(result)
             if(result.data.data!=null){
                 this.notify(["success","Registro Exitoso"]);
                 this.createuserldap();

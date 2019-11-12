@@ -62,6 +62,7 @@ class Sidebar extends React.Component {
         this.setState({ login: true, load: true});
       } 
     }).catch((e) => {
+      console.log(e);
     });
   }
   render() {

@@ -1,7 +1,6 @@
 import Home from "views/Home.jsx";
 import Icons from "views/Icons.jsx";
 import Notifications from "views/Notifications.jsx";
-import Typography from "views/Typography.jsx";
 import TusPagos from "views/TusPagos.jsx";
 import UserProfile from "views/UserProfile.jsx";
 import Register from "views/Registro.jsx";
@@ -22,21 +21,21 @@ var routes = [
     path: "/favorites",
     name: "Favoritos",
     icon: "tim-icons icon-heart-2",
-    component: Home, //TableList
+    component: Home,
     layout: "/mh"
   },
   {
     path: "/reservations",
     name: "Mis Reservas",
     icon: "tim-icons icon-calendar-60",
-    component: Typography,
+    component: Home,
     layout: "/mh"
   },
   {
     path: "/anocement",
     name: "Mis Anuncios",
     icon: "tim-icons icon-single-copy-04",
-    component: Home, //Typography
+    component: Home,
     layout: "/mh"
   },
   

@@ -24,7 +24,6 @@ export default class Test extends React.Component {
     let data = this.state.lodging;
     data[parseInt(event.target.id, 10)] = event.target.value;
     this.setState({ lodging: data });
-    console.log(this.state.lodging);
   }
   handleCheck(event) {
     let data = this.state.lodging;
@@ -37,7 +36,6 @@ export default class Test extends React.Component {
       data[parseInt(event.target.id, 10)] = 1
     }
     this.setState({ lodging: data });
-    console.log(this.state.lodging)
   }
 
   // INFORMACION
@@ -111,9 +109,7 @@ export default class Test extends React.Component {
         }
       }).then((result) => {
         localStorage.setItem('Update_Lodging', null);
-        console.log(result)
         if (result.data.data != null) {
-            console.log(this.state.locationid)
           let info = result.data.data.lodgingById
           let data = this.state.lodging
           data[0] = info.lodging_name
@@ -140,7 +136,6 @@ export default class Test extends React.Component {
           data[21] = info.lodging_description
           data[22] = info.host_id
           data[23] = info.lodging_id
-          console.log(data)
           this.setState({lodging:data, load:true})
           
         } else {
@@ -155,7 +150,6 @@ export default class Test extends React.Component {
   }
 
   makepeticion() {
-    console.log("SSSS");
     let complete = true;
     for (let i = 0; i < 7; i++) {
       if (this.state.lodging[i] == undefined) {
@@ -240,7 +234,6 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log(result)
         if (result.data.data != null) {
           let a = result.data.data.updateLodging.lodging_id
           this.notify(["success", "Actualización exitosa de id: ".concat(a)]);
@@ -287,7 +280,6 @@ export default class Test extends React.Component {
 
 
   render() {
-    console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
         let horas = this.state.hourframe;
@@ -304,7 +296,6 @@ export default class Test extends React.Component {
 
       </>)
     } else {
-        console.log(this.state.lodging)
       return (
         <>
           <div className="content">

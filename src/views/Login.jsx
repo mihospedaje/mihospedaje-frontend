@@ -20,7 +20,6 @@ class Register extends React.Component {
         let data = this.state.datalogin;
         data[parseInt(event.target.id, 10)] = event.target.value;
         this.setState({ datalogin:data});
-        console.log(this.state.datalogin);
       }
       notify = place => {
         var type = place[0];
@@ -96,7 +95,7 @@ class Register extends React.Component {
                                 <CardBody>
                                     <Form>
                                         <FormGroup>
-                                            <label> Usuario ID</label>
+                                            <label> Email</label>
                                             <Input id="0" placeholder="email@email.com" type="email" onChange={this.handleChange} />
                                         </FormGroup>
                                         <FormGroup>

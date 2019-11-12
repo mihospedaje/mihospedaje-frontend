@@ -25,7 +25,6 @@ export default class Test extends React.Component {
     let data = this.state.lodging;
     data[parseInt(event.target.id, 10)] = event.target.value;
     this.setState({ lodging: data });
-    console.log(this.state.lodging);
   }
   handleCheck(event) {
     let data = this.state.lodging;
@@ -38,7 +37,6 @@ export default class Test extends React.Component {
       data[parseInt(event.target.id, 10)] = 1
     }
     this.setState({ lodging: data });
-    console.log(this.state.lodging)
   }
 
   // INFORMACION
@@ -74,7 +72,6 @@ export default class Test extends React.Component {
   };
 
   makepeticion() {
-    console.log("SSSS");
     let complete = true;
     for (let i = 0; i < 7; i++) {
       if (this.state.lodging[i] == undefined || this.state.lodging[i] == "") {
@@ -163,7 +160,6 @@ export default class Test extends React.Component {
         this.state.lodging[i] = 0
       }
     }
-    console.log(this.state.lodging)
     if (complete) {
       axios({
         url: GraphQLURL,
@@ -204,7 +200,6 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log(result)
         if (result.data.data != null) {
           let a = result.data.data.createLodging.lodging_id
           this.notify(["success", "Registro Exitoso con id: ".concat(a)]);
@@ -256,10 +251,10 @@ export default class Test extends React.Component {
     }).then((result) => {
       if(result.data.data != null){
         this.setState({id:result.data.data.userByEmail.id});
-        console.log(this.state.id);
         this.getlocation();
       }
     }).catch((e) => {
+      console.log(e);
     });
   }
   validatetoken() {
@@ -280,7 +275,6 @@ export default class Test extends React.Component {
         var jwt = require("jsonwebtoken");
         var decoded = jwt.decode(localStorage.jwt);
         var email = (decoded.body.split(",")[0]).split(":")[1];
-        console.log(email);
         this.getid(email);
       } else {
         localStorage.setItem('View_User', "");
@@ -290,6 +284,7 @@ export default class Test extends React.Component {
         window.location.pathname = 'mh/login'
       }
     }).catch((e) => {
+      console.log(e);
       localStorage.setItem('View_User', "");
       localStorage.setItem('View_Lodging', "");
       localStorage.setItem('jwt', "");
@@ -299,7 +294,6 @@ export default class Test extends React.Component {
   }
 
   render() {
-    console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
         let horas = this.state.hourframe;

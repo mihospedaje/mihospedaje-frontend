@@ -21,13 +21,12 @@ class Home extends React.Component {
   generatecol(info) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} reserva= {null} onClick={console.log("S")}/>
+        <CardLodging lodinfo={info} reserva= {null}/>
       </Col>
     );
   }
   generaterow(info) {
     var colums = []
-    console.log(info)
     for (let i = 0; i < info.length; i++) {
       colums[i] = this.generatecol(info[i]);
     }
@@ -78,7 +77,7 @@ class Home extends React.Component {
       this.setState({ load: true, page: lodgings });
      
     }).catch((e) => {
-      console.log(e)
+      console.log(e);
     });
   };
 
