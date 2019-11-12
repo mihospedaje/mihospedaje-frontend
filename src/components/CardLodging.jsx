@@ -69,6 +69,8 @@ class CardLodging extends React.Component {
             case 3:
                 lodginginfo.lodging_provide = "Habitación Compartida"
                 break;
+            default:
+                break;
         }
         if (!this.state.load) {
             if (!this.state.charge) {
