@@ -101,12 +101,10 @@ export default class Pago extends React.Component{
               }`
           }
         }).then((result) => {
-          console.log(result)
           if(result.data.data!=null){
             let data = result.data.data.reservationById;
-          
-            this.setState ({data: data,load: true})
-            
+            this.setState ({data: data})
+            this.getLodgingById(this.state.data.lodging_id);
           }else{
               //this.notify(["danger","Registro Fallido"]);    
           }
@@ -124,17 +122,16 @@ export default class Pago extends React.Component{
           data: {
               query: `query {
                 lodgingById(id: ${id}){
-                    lodging_description
+                    lodging_name
                     
                   }
                 }`
           }
         }).then((result) => {
-          console.log(result)
           if(result.data.data!=null){
             let data = result.data.data.lodgingById;
           
-            this.setState ({data2: data,load2: true})
+            this.setState ({data2: data,load: true})
             
           }else{
               //this.notify(["danger","Registro Fallido"]);    
@@ -148,10 +145,9 @@ export default class Pago extends React.Component{
       }
       render (){
 
-        if (!this.state.load && !this.state.load2) {
+        if (!this.state.load) {
             if (!this.state.charge) {
               this.getReservationById(this.props.info.reservation_id);
-              this.getLodgingById(this.state.data.lodging_id);
               this.setState({ charge: true });
             }
             return(<>
@@ -167,7 +163,7 @@ export default class Pago extends React.Component{
                     <CardContent>
                       
                       <Typography variant="h6" component="h2">
-                        {this.state.data2.lodging_description} 
+                        {this.state.data2.lodging_name} 
                       </Typography>
                       <Typography className={classes.pos} color="textSecondary">
                       <div id='fechas'><p>

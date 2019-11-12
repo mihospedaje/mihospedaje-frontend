@@ -7,7 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Popup from "reactjs-popup";
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { Card, CardHeader, CardBody, CardTitle, Row, Col, Button, Input } from "reactstrap";
+import { Card, CardHeader, CardBody, CardTitle, Row, Col, Button, Input, Form, FormGroup } from "reactstrap";
 import HomeIcon from '@material-ui/icons/Home';
 import WifiIcon from '@material-ui/icons/Wifi';
 import TvIcon from '@material-ui/icons/Tv';
@@ -15,6 +15,7 @@ import AcUnitIcon from '@material-ui/icons/AcUnit';
 import PhoneIcon from '@material-ui/icons/Phone';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import LocalLaundryServiceIcon from '@material-ui/icons/LocalLaundryService';
+import NotificationAlert from "react-notification-alert";
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -66,7 +67,6 @@ export default class Test extends React.Component {
   changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
   // INFORMACION
   getUser(information){
-    console.log("User ",information)
     axios({
       url: GraphQLURL,
       method: 'post',
@@ -89,8 +89,7 @@ export default class Test extends React.Component {
       }
 
   }).catch((e) =>{
-      console.log(e);
-     
+    console.log(e);
   });
   }
   getlocation(information) {
@@ -105,12 +104,10 @@ export default class Test extends React.Component {
             country
             city
           }
-        }
-                    `
+        }`
       }
     }).then((result) => {
       var info = result.data.data.locationById
-      console.log(info)
       country = info.country
       city = info.city
       information.location_id = city.concat(", ",country)
@@ -118,31 +115,24 @@ export default class Test extends React.Component {
       
       
     }).catch((e) => {
-      console.log(e)
-      //return "city.concat(",",country)"
+      console.log(e);
     });
   };
   makepeticion() {
-
-    console.log("SSSS");
-    console.log(this.state.reservation);
-    
-
-    
-    //console.log(this.state.reservation)
-      
+    if(localStorage.IsLogged=="true"){
       axios({
         url: GraphQLURL,
         method: 'post',
         data: {
           query: `mutation {
             createReservation(reservation: {
-                        user_id: ${localStorage.UsrID}
+                        user_id: ${this.state.id}
                         start_date: "${this.state.reservation[0]}"
                         end_date: "${this.state.reservation[1]}"
                         guest_adult_number: ${this.state.reservation[2]}
                         guest_children_number: ${this.state.reservation[3]}
-                        is_cancel: false                        
+                        is_cancel: false
+                        lodging_id: ${this.state.lodging.lodging_id}                        
                         
                         }) {
                           reservation_id
@@ -151,38 +141,34 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        
         if (result.data.data!=null) {
           let a = result.data.data.createReservation.reservation_id
           //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
           //window.location.pathname = '/mh/home'
-          console.log(a)
           this.updatebill(a)
         } else {
+          this.notify(["danger", "No se ha realizado la reserva"]);
           //this.notify(["danger", "Actualización Fallida"]);
         }
 
       }).catch((e) => {
-        console.log("catch")
-        
-        console.log(e)
-        //this.notify(["danger", "Actualización Fallida"]);
-
+        console.log(e);
+        this.notify(["danger", "No se ha realizado la reserva"]);
       });
+    }else{
+      window.location.pathname = '/mh/login';
+    }
     
     
   };
   updatebill(a) {
-
-    console.log("FFFF");
-          
       axios({
         url: GraphQLURL,
         method: 'post',
         data: {
           query: `mutation {
             createPayment(payment: {
-                        user_id: ${localStorage.UsrID}
+                        user_id: ${this.state.id}
                         amount: 15000
                         reservation_id: ${a}
                         method: "master card"                                 
@@ -193,21 +179,16 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        console.log("salida2")
-        console.log(result)
-        if (result.data.status == 200) {
-          let b = result.data.data.createPayment.user_id
-          //this.notify(["success", "Actualización Exitosa con id: ".concat(a)]);
-          //window.location.pathname = '/mh/login'
-
+        if (result.data.data!=null) {
+          let b = result.data.data.createPayment.user_id;
+          this.notify(["success", "Se ha realizado la reserva"]);
         } else {
-          //this.notify(["danger", "Actualización Fallida"]);
+          this.notify(["danger", "No se ha realizado la reserva"]);
         }
 
       }).catch((e) => {
-        console.log(e)
-        //this.notify(["danger", "Actualización Fallida"]);
-
+        console.log(e);
+        this.notify(["danger", "No se ha realizado la reserva"]);
       });
     
   };
@@ -230,7 +211,6 @@ export default class Test extends React.Component {
     this.refs.notificationAlert.notificationAlert(options);
   };
   Reserva() {
-    if(this.state.id !=null){
     return (
       <Popup trigger={<Button className="btn-fill" color="primary" type="submit">Reservar</Button>}
         modal
@@ -246,21 +226,29 @@ export default class Test extends React.Component {
                   </a>
             <div className="header2"> Reservar alojamiento </div>
             <div className="content2">
-              <br></br><b>Fecha de llegada</b><br></br>
-
+            <Form>
+            <FormGroup>
+              <label>Fecha de llegada</label>
               <Input id="0"  type="date"  onChange={this.handleChange}/>
-              <br></br><b>Fecha de salida</b><br></br>
-
+            </FormGroup>
+            <FormGroup>
+              <label>Fecha de salida</label>
               <Input id="1"  type="date" onChange={this.handleChange}/>
-              
-              <br></br><b>Número de huéspdes adultos</b><br></br>
+            </FormGroup>
+            <FormGroup>
+              <label>Número de huéspdes adultos</label>
               <Input id="2" placeholder="1-16" type="text"  onChange={this.handleChange}/>
-
-              <br></br><b>Número de huéspdes niños</b><br></br>
+            </FormGroup>
+            <FormGroup>
+              <label>Número de huéspdes niños</label>
               <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
-
-              <Button className="btn-fill" color="primary" type="submit" onClick={()=>this.makepeticion()}>Hacer reserva</Button>
-
+            </FormGroup>
+            <FormGroup>
+              <label>Precio: </label>
+              <label>${this.state.lodging.price_per_person_and_nigth} COP</label>
+            </FormGroup>
+              <Button className="btn-fill" color="primary" onClick={()=>this.makepeticion()}>Hacer reserva</Button>
+            </Form>
             </div>
           </div>
         )}
@@ -269,9 +257,6 @@ export default class Test extends React.Component {
       </Popup>
 
     );
-        }else{
-          window.location.pathname = '/mh/login'
-        }
   };
 
   getlodginginfo() {
@@ -304,7 +289,6 @@ export default class Test extends React.Component {
           }`
       }
     }).then((result) => {
-      console.log(result)
       if (result.data.data != null) {
         let info = result.data.data.lodgingById;
         switch (info.lodging_provide) {
@@ -379,6 +363,24 @@ export default class Test extends React.Component {
 
     });
   }
+  notify = place => {
+    var type = place[0];
+    var options = {};
+    options = {
+      place: "tc",
+      message: (
+        <div>
+          <div>
+            {place[1]}
+          </div>
+        </div>
+      ),
+      type: type,
+      icon: "tim-icons icon-bell-55",
+      autoDismiss: 7
+    };
+    this.refs.notificationAlert.notificationAlert(options);
+  };
   update(id){
       window.location.pathname = '/mh/updatelodging'
       localStorage.setItem('Update_Lodging', parseInt(id));
@@ -398,10 +400,10 @@ export default class Test extends React.Component {
     }).then((result) => {
       if(result.data.data != null){
         this.setState({id:result.data.data.userByEmail.id});
-        console.log(this.state.id);
         this.getlodginginfo();
       }
     }).catch((e) => {
+      console.log(e);
     });
   }
   validatetoken() {
@@ -422,7 +424,6 @@ export default class Test extends React.Component {
         var jwt = require("jsonwebtoken");
         var decoded = jwt.decode(localStorage.jwt);
         var email = (decoded.body.split(",")[0]).split(":")[1];
-        console.log(email);
         this.getid(email);
       } else {
         localStorage.setItem('View_User', "");
@@ -432,12 +433,18 @@ export default class Test extends React.Component {
         window.location.pathname = 'mh/login'
       }
     }).catch((e) => {
+      console.log(e);
       localStorage.setItem('View_User', "");
       localStorage.setItem('View_Lodging', "");
       localStorage.setItem('jwt', "");
       localStorage.setItem('IsLogged', false);
       window.location.pathname = 'mh/login'
     });
+  }
+  viewprofile(){
+    localStorage.setItem('View_User', this.state.host_id);
+    window.location.pathname = 'mh/profile'
+    
   }
 
 
@@ -448,7 +455,6 @@ export default class Test extends React.Component {
     } = this.state;
     if (!this.state.load) {
       if (!this.state.charge) {
-        console.log(localStorage.IsLogged)
         if(localStorage.IsLogged  == "true" ){
           this.validatetoken();
         }else{
@@ -461,12 +467,12 @@ export default class Test extends React.Component {
       </>)
     } else {
       let lodginginfo = this.state.lodging;
-      console.log(this.state.host_id)
-      console.log(this.state.id)
-      console.log(lodginginfo.host_id===this.state.id)
       return (
         <>
           <div className="content">
+          <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" />
+          </div>
             <Row>
 
               <Col lg="5">
@@ -515,13 +521,15 @@ export default class Test extends React.Component {
                       </Col>
                       <Col>
                           <Row>
-                          <CardMedia
+                          <CardMedia 
+                            onClick = {()=>this.viewprofile()}
                             className="avatar"
                             image="https://concepto.de/wp-content/uploads/2018/08/persona-e1533759204552.jpg"
                             title="hospedaje"
                             style={{ height: 50, width: 50 }}
                             text = "SSS"/>
                             <p style={{ fontSize: "150%"}}>{lodginginfo.host_id}</p>
+                            
                           </Row>
                          </Col>
                         </Row>

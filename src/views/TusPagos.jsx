@@ -11,10 +11,13 @@ class Bill extends React.Component{
     this.state = {
       data : [],
       charge: false,
-      load: false
+      load: false,
+      id : null
       
     }
     this.getPaymentById = this.getPaymentById.bind(this);
+    this.validatetoken = this.validatetoken.bind(this);
+    this.getid = this.getid.bind(this);
   }
   getPaymentById(){
     axios({
@@ -22,7 +25,7 @@ class Bill extends React.Component{
       method: 'post',
       data: {
           query: `query {
-            paymentById (user_id: ${localStorage.UsrID}) {
+            paymentById (user_id: ${this.state.id}) {
               reservation_id
               amount
             } 
@@ -30,17 +33,10 @@ class Bill extends React.Component{
       }
   }).then((result) => {
     
-      console.log(result)
       if(result.data.data!=null){
         let data = [];
         data = result.data.data.paymentById;
-        //console.log(data[0].amount)
-        //console.log(data[1].amount)
-        //var reser = []
-      
-        
         this.setState ({data: data,load: true})
-        
       }else{
           //this.notify(["danger","Registro Fallido"]);    
       }
@@ -51,12 +47,67 @@ class Bill extends React.Component{
       
   });
   }//getInfo
-    
+  
+  getid(email) {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query{
+          userByEmail(email:${email}){
+            id
+          }
+        }`
+      }
+    }).then((result) => {
+      if(result.data.data != null){
+        this.setState({id:result.data.data.userByEmail.id});
+        this.getPaymentById();
+      }
+    }).catch((e) => {
+      console.log(e);
+    });
+  }
+  validatetoken() {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation{
+          validate(credentials:{
+            token:"${localStorage.jwt}" 
+          }){
+            message
+          }
+        }`
+      }
+    }).then((result) => {
+      if (result.data.data.validate.message === "Token Valido") {
+        var jwt = require("jsonwebtoken");
+        var decoded = jwt.decode(localStorage.jwt);
+        var email = (decoded.body.split(",")[0]).split(":")[1];
+        this.getid(email);
+      } else {
+        localStorage.setItem('View_User', "");
+        localStorage.setItem('View_Lodging', "");
+        localStorage.setItem('jwt', "");
+        localStorage.setItem('IsLogged', false);
+        window.location.pathname = 'mh/login'
+      }
+    }).catch((e) => {
+      console.log(e);
+      localStorage.setItem('View_User', "");
+      localStorage.setItem('View_Lodging', "");
+      localStorage.setItem('jwt', "");
+      localStorage.setItem('IsLogged', false);
+      window.location.pathname = 'mh/login'
+    });
+  }
   
   render(){
     if (!this.state.load) {
       if (!this.state.charge) {
-        this.getPaymentById();
+        this.validatetoken();
         this.setState({ charge: true });
       }
       return(<>
