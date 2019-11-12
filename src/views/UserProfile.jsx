@@ -37,7 +37,7 @@ class UserProfile extends React.Component {
         query: `mutation {
                       updatePassword( user: {
                       email: "${this.state.profile[3]}"
-                      password: "${this.state.register[3]}"                        
+                      password: "${this.state.register[4]}"                        
                       }) {
                       data
                       }
