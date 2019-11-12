@@ -53,7 +53,7 @@ class Register extends React.Component {
     makepeticion(){
         let complete = true;
         for(let i = 0; i<5;i++){
-            if(this.state.register[i]==undefined){
+            if(this.state.register[i]===undefined){
                 complete = false;
             }
         }

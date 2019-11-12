@@ -1,7 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-
-import { Container, Row, Nav, NavItem, NavLink } from "reactstrap";
+import { Container} from "reactstrap";
 
 class Footer extends React.Component {
   render() {

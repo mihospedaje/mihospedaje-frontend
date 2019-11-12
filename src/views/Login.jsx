@@ -59,7 +59,7 @@ class Register extends React.Component {
             }
           }).then((result) => {
             var info = result.data.data.loginUser
-            if(info.success == true){
+            if(info.success === true){
                 localStorage.setItem('jwt', info.token);
                 localStorage.setItem('IsLogged', true);
                 window.location.pathname = 'mh/profile'

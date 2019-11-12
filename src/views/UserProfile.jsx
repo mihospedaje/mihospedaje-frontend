@@ -62,7 +62,7 @@ class UserProfile extends React.Component {
   makepeticion() {
     let complete = true;
     for (let i = 0; i < 5; i++) {
-      if (this.state.register[i] == undefined) {
+      if (this.state.register[i] === undefined) {
         complete = false;
       }
     }
@@ -78,7 +78,7 @@ class UserProfile extends React.Component {
                         lastname: "${this.state.register[1]}"
                         birthdate: "${this.state.register[2]}"
                         email: "${this.state.profile[3]}"
-                        password: "${this.state.register[3]}"                        
+                        password: "${this.state.register[4]}"                        
                         idrole:1
                         image: ""
                         }) {
@@ -89,7 +89,6 @@ class UserProfile extends React.Component {
         }
       }).then((result) => {
         if (result.data.data != null) {
-          let a = result.data.data.updateUser.id
           this.actualizarldap();
         } else {
           this.notify(["danger", "Actualización Fallida"]);
@@ -132,9 +131,7 @@ class UserProfile extends React.Component {
       >
         {close => (
           <div className="modal2">
-            <a className="close2" onClick={close}>
-              &times;
-                  </a>
+            <a className="close2" onClick={close}>&times;</a>
             <div className="header2"> Editar perfil </div>
             <div className="content2">
               <br></br><b>Nombre</b><br></br>
@@ -145,7 +142,7 @@ class UserProfile extends React.Component {
               <Input id="1" defaultValue={this.state.profile[1]} type="text" onChange={this.handleChange} />
 
               <br></br><b>Contraseña</b><br></br>
-              <Input id="3" placeholder="Contraseña" type="password" onChange={this.handleChange} />
+              <Input id="4" placeholder="Contraseña" type="password" onChange={this.handleChange} />
 
               <Button className="btn-fill" color="primary" type="submit" onClick={() => this.makepeticion()}>Actualizar</Button>
 
@@ -250,7 +247,7 @@ class UserProfile extends React.Component {
     console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
-        if (localStorage.View_User != "") {
+        if (localStorage.View_User !== "") {
           this.setState({view:true})
           this.getinfoprofile(localStorage.View_User);
           localStorage.setItem('View_User', "");
