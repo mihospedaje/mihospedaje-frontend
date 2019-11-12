@@ -15,20 +15,22 @@ class Home extends React.Component {
       charge: false,
       load: false,
       page: null,
+      fav: []
     };
     this.getlodging = this.getlodging.bind(this);
+    this.getfav = this.getfav.bind(this);
   }
-  generatecol(info) {
+  generatecol(info,fav) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} reserva= {null}/>
+        <CardLodging lodinfo={info} fav={fav} reserva= {null}/>
       </Col>
     );
   }
-  generaterow(info) {
+  generaterow(info,fav) {
     var colums = []
     for (let i = 0; i < info.length; i++) {
-      colums[i] = this.generatecol(info[i]);
+      colums[i] = this.generatecol(info[i],fav[i]);
     }
     return (
       <Row>
@@ -38,6 +40,29 @@ class Home extends React.Component {
       </Row>
     )
   }
+  getfav(){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query {
+                    favoriteByUserid (user_id:${this.state.id}){
+                          lodging_id
+                     }
+                }`
+      }
+    }).then((result) => {
+      var info = result.data.data.favoriteByUserid;
+      var favorites = []
+      for(let i= 0; i<info.length;i++){
+         favorites[i] = info[i].lodging_id;
+      }
+      this.setState({fav:favorites});
+      this.getlodging();
+    }).catch((e) => {
+      console.log(e);
+    });
+  };
   getlodging() {
     axios({
       url: GraphQLURL,
@@ -59,16 +84,43 @@ class Home extends React.Component {
       let lodgings = []
       let i = 0
       let j = 0
+      var misfavorites = this.state.fav;
+      console.log(misfavorites)
       while (i < info.length) {
         let recive = null;
         if (i + 1 < info.length) {
           if (i + 2 < info.length) {
-            recive = this.generaterow([info[i], info[i + 1], info[i + 2]]);
+              var favorites = [null,null,null]
+              if(misfavorites.includes(info[i].lodging_id)){
+                favorites[0] = "red"
+              }
+              if(misfavorites.includes(info[i+1].lodging_id)){
+                favorites[1] = "red"
+              }
+              if(misfavorites.includes(info[i+2].lodging_id)){
+                favorites[2] = "red"
+              }
+              recive = this.generaterow([info[i], info[i + 1], info[i + 2]],favorites);
+              
+              
+
           } else {
-            recive = this.generaterow([info[i], info[i + 1]])
+            var favorites = [null,null]
+              if(misfavorites.includes(info[i].lodging_id)){
+                favorites[0] = "red"
+              }
+              if(misfavorites.includes(info[i+1].lodging_id)){
+                favorites[1] = "red"
+              }
+              recive = this.generaterow([info[i], info[i + 1]],favorites);
           }
         } else {
-          recive = this.generaterow([info[i]])
+          var favorites = [null]
+          if(misfavorites.includes(info[i].lodging_id)){
+            favorites[0] = "red"
+          }
+          recive = this.generaterow([info[i]],favorites);
+          
         }
         lodgings[j] = recive
         j += 1
@@ -81,11 +133,71 @@ class Home extends React.Component {
     });
   };
 
+  getid(email) {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query{
+          userByEmail(email:${email}){
+            id
+          }
+        }`
+      }
+    }).then((result) => {
+      if(result.data.data != null){
+        this.setState({id:result.data.data.userByEmail.id});
+        this.getfav();
+      }
+    }).catch((e) => {
+      console.log(e);
+    });
+  }
+  validatetoken() {
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `mutation{
+          validate(credentials:{
+            token:"${localStorage.jwt}" 
+          }){
+            message
+          }
+        }`
+      }
+    }).then((result) => {
+      if (result.data.data.validate.message === "Token Valido") {
+        var jwt = require("jsonwebtoken");
+        var decoded = jwt.decode(localStorage.jwt);
+        var email = (decoded.body.split(",")[0]).split(":")[1];
+        this.getid(email);
+      } else {
+        localStorage.setItem('View_User', "");
+        localStorage.setItem('View_Lodging', "");
+        localStorage.setItem('jwt', "");
+        localStorage.setItem('IsLogged', false);
+        window.location.pathname = 'mh/login'
+      }
+    }).catch((e) => {
+      console.log(e);
+      localStorage.setItem('View_User', "");
+      localStorage.setItem('View_Lodging', "");
+      localStorage.setItem('jwt', "");
+      localStorage.setItem('IsLogged', false);
+      window.location.pathname = 'mh/login'
+    });
+  }
+
   render() {
     console.log(localStorage)
     if (!this.state.load) {
       if (!this.state.charge) {
+        if(localStorage.IsLogged!="true"){
         this.getlodging();
+        }else{
+          this.validatetoken();
+        }
         this.setState({ charge: true });
       }
       return (<>

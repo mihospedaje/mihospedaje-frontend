@@ -16,23 +16,24 @@ class Home extends React.Component {
       charge: false,
       load: false,
       page: null,
-      id : null
+      id : null,
+      fav: []
     };
-    this.getlodging = this.getlodging.bind(this);
+    this.getreservations = this.getreservations.bind(this)
     this.validatetoken = this.validatetoken.bind(this);
     this.getid = this.getid.bind(this);
   }
-  generatecol(info) {
+  generatecol(info,fav) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} reserva= {info}/>
+        <CardLodging lodinfo={null} fav={fav} reserva= {info}/>
       </Col>
     );
   }
-  generaterow(info) {
+  generaterow(info,fav) {
     var colums = []
     for (let i = 0; i < info.length; i++) {
-      colums[i] = this.generatecol(info[i]);
+      colums[i] = this.generatecol(info[i],fav[i]);
     }
     return (
       <Row>
@@ -42,6 +43,29 @@ class Home extends React.Component {
       </Row>
     )
   }
+  getfav(){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+        query: `query {
+                    favoriteByUserid (user_id:${this.state.id}){
+                          lodging_id
+                     }
+                }`
+      }
+    }).then((result) => {
+      var info = result.data.data.favoriteByUserid;
+      var favorites = []
+      for(let i= 0; i<info.length;i++){
+         favorites[i] = info[i].lodging_id;
+      }
+      this.setState({fav:favorites});
+      this.getreservations();
+    }).catch((e) => {
+      console.log(e);
+    });
+  };
   getreservations(){
     axios({
         url: GraphQLURL,
@@ -59,22 +83,48 @@ class Home extends React.Component {
                       `
         }
       }).then((result) => {
+        
         var info = result.data.data.reservationByUser
         console.log(info)
         if(info.length!=0){
           let lodgings = []
         let i = 0
         let j = 0
+        var misfavorites = this.state.fav;
+        console.log(misfavorites);
         while (i < info.length) {
+          console.log(info[i].lodging_id)
           let recive = null;
           if (i + 1 < info.length) {
             if (i + 2 < info.length) {
-              recive = this.generaterow([info[i], info[i + 1], info[i + 2]]);
+              var favorites = [null,null,null]
+              
+              if(misfavorites.includes(info[i].lodging_id)){
+                favorites[0] = "red"
+              }
+              if(misfavorites.includes(info[i+1].lodging_id)){
+                favorites[1] = "red"
+              }
+              if(misfavorites.includes(info[i+2].lodging_id)){
+                favorites[2] = "red"
+              }
+              recive = this.generaterow([info[i], info[i + 1], info[i + 2]],favorites);
             } else {
-              recive = this.generaterow([info[i], info[i + 1]])
+              var favorites = [null,null]
+              if(misfavorites.includes(info[i].lodging_id)){
+                favorites[0] = "red"
+              }
+              if(misfavorites.includes(info[i+1].lodging_id)){
+                favorites[1] = "red"
+              }
+              recive = this.generaterow([info[i], info[i + 1]],favorites)
             }
           } else {
-            recive = this.generaterow([info[i]])
+            var favorites = [null]
+          if(misfavorites.includes(info[i].lodging_id)){
+            favorites[0] = "red"
+          }
+            recive = this.generaterow([info[i]],favorites)
           }
           lodgings[j] = recive
           j += 1
@@ -84,58 +134,11 @@ class Home extends React.Component {
       }else{
           this.setState({ load: true, page: null });
       }
-       
       }).catch((e) => {
         console.log(e);
       });
   }
-  getlodging() {
-    axios({
-      url: GraphQLURL,
-      method: 'post',
-      data: {
-        query: `query {
-            lodgingByUser(user_id:${this.state.id}) {
-                          lodging_id
-                          lodging_name
-                          location_id
-                          price_per_person_and_nigth
-                          lodging_provide
-                      }
-                    }
-                    `
-      }
-    }).then((result) => {
-      var info = result.data.data.lodgingByUser
-      if(info.length!=0){
-        let lodgings = []
-      let i = 0
-      let j = 0
-      while (i < info.length) {
-        let recive = null;
-        if (i + 1 < info.length) {
-          if (i + 2 < info.length) {
-            recive = this.generaterow([info[i], info[i + 1], info[i + 2]]);
-          } else {
-            recive = this.generaterow([info[i], info[i + 1]])
-          }
-        } else {
-          recive = this.generaterow([info[i]])
-        }
-        lodgings[j] = recive
-        j += 1
-        i += 3
-      }
-      this.setState({ load: true, page: lodgings });
-    }else{
-        this.setState({ load: true, page: null });
-    }
-     
-    }).catch((e) => {
-      console.log(e);
-    });
-  };
-
+  
   getid(email) {
     axios({
       url: GraphQLURL,
@@ -150,7 +153,7 @@ class Home extends React.Component {
     }).then((result) => {
       if(result.data.data != null){
         this.setState({id:result.data.data.userByEmail.id});
-        this.getreservations();
+        this.getfav();
       }
     }).catch((e) => {
       console.log(e);
@@ -222,12 +225,13 @@ class Home extends React.Component {
                       image={require("assets/img/favicon.png")}
                       title="hospedaje"
                       style={{ height: 360 , width: 360}}
-                    />
-                    <br/>
+                    >
+                      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                      <CardText className="text-center">
-                         <label>Aún no tienes ningún hospedaje registrado</label><br/>
-                         <label>Empieza a ganar dinero con nosotros</label>
-                         <label>registra un hospedaje<a href="/mh/createlodging"> aquí</a></label></CardText>
+                         <label>Aún no tienes ninguna reserva</label><br/>
+                         <label>Escoge tu lugar favorito</label><br/>
+                         <label>Para tener una experiencia inolvidable</label></CardText>
+                         </CardMedia>
                   </CardBody>
                
             </Col>
