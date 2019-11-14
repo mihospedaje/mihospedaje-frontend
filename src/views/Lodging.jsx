@@ -283,14 +283,6 @@ deletefav() {
             <Form>
             <Calendar/>
             <FormGroup>
-              <label>Fecha de llegada</label>
-              <Input id="0"  type="date"  onChange={this.handleChange}/>
-            </FormGroup>
-            <FormGroup>
-              <label>Fecha de salida</label>
-              <Input id="1"  type="date" onChange={this.handleChange}/>
-            </FormGroup>
-            <FormGroup>
               <label>Número de huéspdes adultos</label>
               <Input id="2" placeholder="1-16" type="text"  onChange={this.handleChange}/>
             </FormGroup>

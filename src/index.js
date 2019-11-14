@@ -12,6 +12,19 @@ import "assets/css/nucleo-icons.css";
 
 const hist = createBrowserHistory();
 document.body.classList.add("white-content");
+
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: ' AKIAZO7ZT7EYV25R754V',
+  secretAccessKey: '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'
+});
+s3.listBuckets({},(err,data)=>{
+  if(err) throw err;
+  console.log(data);
+});
+
+
+
 ReactDOM.render(
   
 

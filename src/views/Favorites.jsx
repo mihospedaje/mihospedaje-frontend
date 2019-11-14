@@ -2,7 +2,7 @@ import React from "react";
 import axios from 'axios';
 import CardLodging from "components/CardLodging.jsx";
 import { GraphQLURL } from '../ipgraphql'
-import { Card, CardHeader, CardBody, CardFooter, CardText, Row, Col, Button, Input } from "reactstrap";
+import {CardBody,CardText, Row, Col} from "reactstrap";
 import CardMedia from '@material-ui/core/CardMedia';
 
 
@@ -23,17 +23,17 @@ class Home extends React.Component {
     this.validatetoken = this.validatetoken.bind(this);
     this.getid = this.getid.bind(this);
   }
-  generatecol(info,fav) {
+  generatecol(info) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={null} fav={fav} reserva= {info}/>
+        <CardLodging lodging={null} favorite={info} fav={info.id} reserva= {null}/>
       </Col>
     );
   }
-  generaterow(info,fav) {
+  generaterow(info) {
     var colums = []
     for (let i = 0; i < info.length; i++) {
-      colums[i] = this.generatecol(info[i],fav[i]);
+      colums[i] = this.generatecol(info[i]);
     }
     return (
       <Row>
@@ -43,33 +43,6 @@ class Home extends React.Component {
       </Row>
     )
   }
-  getfav(){
-    axios({
-      url: GraphQLURL,
-      method: 'post',
-      data: {
-        query: `query {
-                    favoriteByUserid (user_id:${this.state.id}){
-                          id
-                          lodging_id
-                     }
-                }`
-      }
-    }).then((result) => {
-      var info = result.data.data.favoriteByUserid;
-      var favorites = []
-      var idfavorites = []
-      for(let i= 0; i<info.length;i++){
-         favorites[i] = info[i].lodging_id;
-         idfavorites[i] = info[i].id; 
-
-      }
-      this.setState({fav:favorites, idfav:idfavorites});
-      this.getfavorites();
-    }).catch((e) => {
-      console.log(e);
-    });
-  };
   getfavorites(){
     axios({
         url: GraphQLURL,
@@ -85,48 +58,20 @@ class Home extends React.Component {
         }
       }).then((result) => {
         var info = result.data.data.favoriteByUserid
-        if(info.length!=0){
+        if(info.length!==0){
           let lodgings = []
         let i = 0
         let j = 0
-        var misfavorites = this.state.fav;
         while (i < info.length) {
           let recive = null;
           if (i + 1 < info.length) {
             if (i + 2 < info.length) {
-              var favorites = [null,null,null]
-              for(let h = 0; h<misfavorites.length;h++){
-                if(info[i].lodging_id === misfavorites[h]){
-                  favorites[0] = this.state.idfav[h] 
-                }
-                if(info[i+1].lodging_id === misfavorites[h]){
-                  favorites[1] = this.state.idfav[h] 
-                }
-                if(info[i+2].lodging_id === misfavorites[h]){
-                  favorites[2] = this.state.idfav[h] 
-                }
-            }
-              recive = this.generaterow([info[i], info[i + 1], info[i + 2]],favorites);
+              recive = this.generaterow([info[i], info[i + 1], info[i + 2]]);
             } else {
-              var favorites = [null,null]
-              for(let h = 0; h<misfavorites.length;h++){
-                if(info[i].lodging_id === misfavorites[h]){
-                  favorites[0] = this.state.idfav[h] 
-                }
-                if(info[i+1].lodging_id === misfavorites[h]){
-                  favorites[1] = this.state.idfav[h] 
-                }
-            }
-              recive = this.generaterow([info[i], info[i + 1]],favorites)
+              recive = this.generaterow([info[i], info[i + 1]])
             }
           } else {
-            var favorites = [null]
-            for(let h = 0; h<misfavorites.length;h++){
-              if(info[i].lodging_id === misfavorites[h]){
-                favorites[0] = this.state.idfav[h] 
-              }
-          }
-            recive = this.generaterow([info[i]],favorites)
+            recive = this.generaterow([info[i]])
           }
           lodgings[j] = recive
           j += 1
@@ -155,7 +100,7 @@ class Home extends React.Component {
     }).then((result) => {
       if(result.data.data != null){
         this.setState({id:result.data.data.userByEmail.id});
-        this.getfav();
+        this.getfavorites();
       }
     }).catch((e) => {
       console.log(e);

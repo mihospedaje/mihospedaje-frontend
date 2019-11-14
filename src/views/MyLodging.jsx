@@ -3,9 +3,8 @@ import React from "react";
 import axios from 'axios';
 import CardLodging from "components/CardLodging.jsx";
 import { GraphQLURL } from '../ipgraphql'
-import { Card, CardHeader, CardBody, CardFooter, CardText, Row, Col, Button, Input } from "reactstrap";
+import {CardBody,CardText, Row, Col} from "reactstrap";
 import CardMedia from '@material-ui/core/CardMedia';
-
 
 
 class Home extends React.Component {
@@ -27,7 +26,7 @@ class Home extends React.Component {
   generatecol(info,fav) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} fav={fav} reserva= {null}/>
+        <CardLodging lodging={info} favorite={null} fav={fav} reserva= {null}/>
       </Col>
     );
   }
@@ -88,16 +87,16 @@ class Home extends React.Component {
       }
     }).then((result) => {
       var info = result.data.data.lodgingByUser
-      if(info.length!=0){
+      if(info.length!==0){
         let lodgings = []
       let i = 0
       let j = 0
       var misfavorites = this.state.fav;
       while (i < info.length) {
+        var favorites = [null,null,null]
         let recive = null;
         if (i + 1 < info.length) {
           if (i + 2 < info.length) {
-            var favorites = [null,null,null]
             for(let h = 0; h<misfavorites.length;h++){
               if(info[i].lodging_id === misfavorites[h]){
                 favorites[0] = this.state.idfav[h] 
@@ -111,7 +110,6 @@ class Home extends React.Component {
           }
             recive = this.generaterow([info[i], info[i + 1], info[i + 2]],favorites);
           } else {
-            var favorites = [null,null]
             for(let h = 0; h<misfavorites.length;h++){
               if(info[i].lodging_id === misfavorites[h]){
                 favorites[0] = this.state.idfav[h] 
@@ -123,7 +121,6 @@ class Home extends React.Component {
             recive = this.generaterow([info[i], info[i + 1]],favorites)
           }
         } else {
-          var favorites = [null]
           for(let h = 0; h<misfavorites.length;h++){
             if(info[i].lodging_id === misfavorites[h]){
               favorites[0] = this.state.idfav[h] 
