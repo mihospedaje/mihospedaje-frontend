@@ -28,7 +28,7 @@ export default class Test extends React.Component {
   }
   handleCheck(event) {
     let data = this.state.lodging;
-    if (data[parseInt(event.target.id, 10)] == 1) {
+    if (data[parseInt(event.target.id, 10)] === 1) {
       data[parseInt(event.target.id, 10)] = 0
     } else {
       data[parseInt(event.target.id, 10)] = 1
@@ -74,19 +74,19 @@ export default class Test extends React.Component {
   makepeticion() {
     let complete = true;
     for (let i = 0; i < 7; i++) {
-      if (this.state.lodging[i] == undefined || this.state.lodging[i] == "") {
+      if (this.state.lodging[i] === undefined || this.state.lodging[i] === "") {
         complete = false;
       }
     }
     for (let i = 8; i < 12; i++) {
-      if (this.state.lodging[i] == undefined || this.state.lodging[i] == "") {
+      if (this.state.lodging[i] === undefined || this.state.lodging[i] === "") {
         complete = false;
       }else{
         this.state.lodging[i] = parseInt(this.state.lodging[i], 10)
       }
     }
-    if (this.state.lodging[12] != undefined) {
-      if(this.state.lodging[12]!="-1"){
+    if (this.state.lodging[12] !== undefined) {
+      if(this.state.lodging[12]!=="-1"){
         this.state.lodging[12] = parseInt(this.state.lodging[12], 10)
       }else{
         complete=false
@@ -94,8 +94,8 @@ export default class Test extends React.Component {
     }else{
       complete = false
     }
-    if (this.state.lodging[13] != undefined) {
-      if(this.state.lodging[13]!="-1"){
+    if (this.state.lodging[13] !== undefined) {
+      if(this.state.lodging[13]!=="-1"){
         this.state.lodging[13] = parseInt(this.state.lodging[13], 10)
       }else{
         complete=false
@@ -104,59 +104,59 @@ export default class Test extends React.Component {
       complete = false
     }
 
-    if (this.state.lodging[20] == undefined || this.state.lodging[20] == "") {
+    if (this.state.lodging[20] === undefined || this.state.lodging[20] === "") {
       complete = false;
     }
-    if (this.state.lodging[21] == undefined || this.state.lodging[21] == "") {
+    if (this.state.lodging[21] === undefined || this.state.lodging[21] === "") {
       complete = false;
     }
-    if (this.state.lodging[7] == undefined) {
+    if (this.state.lodging[7] === undefined) {
       this.state.lodging[7] = ""
     }
-    if (this.state.lodging[4] != undefined) {
-      if(this.state.lodging[4]!="-1"){
+    if (this.state.lodging[4] !== undefined) {
+      if(this.state.lodging[4]!=="-1"){
         this.state.lodging[4] = this.state.locationid[parseInt(this.state.lodging[4], 10)]
       }else{
         complete=false
       }
     }
-    if (this.state.lodging[2] != undefined) {
-      if(this.state.lodging[2]!="-1"){
+    if (this.state.lodging[2] !== undefined) {
+      if(this.state.lodging[2]!=="-1"){
       this.state.lodging[2] = parseInt(this.state.lodging[2], 10)
     }else{
       complete=false
     }
     }
-    if (this.state.lodging[3] != undefined) {
-      if(this.state.lodging[3]!="-1"){
+    if (this.state.lodging[3] !== undefined) {
+      if(this.state.lodging[3]!=="-1"){
       this.state.lodging[3] = parseInt(this.state.lodging[3], 10)
     }else{
       complete=false
     }
     }
-    if (this.state.lodging[5] != undefined) {
-      if (this.state.lodging[5] != "-1") {
+    if (this.state.lodging[5] !== undefined) {
+      if (this.state.lodging[5] !== "-1") {
       this.state.lodging[5] = parseInt(this.state.lodging[5], 10)
     }else{
       complete=false
     }
     }
-    if (this.state.lodging[12] != undefined) {
-      if (this.state.lodging[12] != "-1") {
+    if (this.state.lodging[12] !== undefined) {
+      if (this.state.lodging[12] !== "-1") {
       this.state.lodging[12] = parseInt(this.state.lodging[12], 10)
     }else{
       complete=false
     }
     }
-    if (this.state.lodging[13] != undefined) {
-      if (this.state.lodging[13] != "-1") {
+    if (this.state.lodging[13] !== undefined) {
+      if (this.state.lodging[13] !== "-1") {
       this.state.lodging[13] = parseInt(this.state.lodging[13], 10)
     }else{
       complete=false
     }
     }
     for (let i = 14; i < 20; i++) {
-      if (this.state.lodging[i] == undefined) {
+      if (this.state.lodging[i] === undefined) {
         this.state.lodging[i] = 0
       }
     }
@@ -200,7 +200,7 @@ export default class Test extends React.Component {
                     `
         }
       }).then((result) => {
-        if (result.data.data != null) {
+        if (result.data.data !== null) {
           let a = result.data.data.createLodging.lodging_id
           this.notify(["success", "Registro Exitoso"]);
           localStorage.setItem('View_Lodging', parseInt(a));

@@ -14,7 +14,7 @@ class MiHospedaje extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      backgroundColor: "black",
+      backgroundColor: "primary",
       sidebarOpened:
         document.documentElement.className.indexOf("nav-open") !== -1
     };

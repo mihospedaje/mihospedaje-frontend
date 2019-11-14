@@ -67,7 +67,8 @@ class CardLodging extends React.Component {
             }
         }).then((result) => {
             var info = result.data.data.lodgingById
-            this.setState({ load: true, lodging: info });
+            this.setState({ lodging: info });
+            this.getlocation(info.location_id);
         }).catch((e) => {
             console.log(e);
         });
@@ -134,7 +135,10 @@ class CardLodging extends React.Component {
         }).then((result) => {
             if (result.data.data != null) {
                 this.notify(["success", "Eliminado de Favoritos"]);
-                this.setState({ color: null })
+                this.setState({ color: null , favorite_id: null })
+                if(this.props.favorite!==null){
+                    window.location.pathname = 'mh/favorites'
+                }
             }
         }).catch((e) => {
             console.log(e);
@@ -209,52 +213,42 @@ class CardLodging extends React.Component {
         });
     }
     render() {
-        if (this.props.reserva === null) {
-            var lodginginfo = this.props.lodinfo;
-            switch (lodginginfo.lodging_provide) {
-                case 1:
-                    lodginginfo.lodging_provide = "Alojamiento Entero"
-                    break;
-                case 2:
-                    lodginginfo.lodging_provide = "Habitación Privada"
-                    break;
-                case 3:
-                    lodginginfo.lodging_provide = "Habitación Compartida"
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            var reservationinfo = this.props.reserva;
+        var reservationinfo = this.props.reserva;
+        var lodginginfo = this.props.lodging;
+        if (this.props.lodging === null) {
             var lodginginfo = this.state.lodging;
-            switch (lodginginfo.lodging_provide) {
-                case 1:
-                    lodginginfo.lodging_provide = "Alojamiento Entero"
-                    break;
-                case 2:
-                    lodginginfo.lodging_provide = "Habitación Privada"
-                    break;
-                case 3:
-                    lodginginfo.lodging_provide = "Habitación Compartida"
-                    break;
-                default:
-                    break;
-            }
+        }
+        switch (lodginginfo.lodging_provide) {
+            case 1:
+                lodginginfo.lodging_provide = "Alojamiento Entero";
+                break;
+            case 2:
+                lodginginfo.lodging_provide = "Habitación Privada";
+                break;
+            case 3:
+                lodginginfo.lodging_provide = "Habitación Compartida";
+                break;
+            default:
+                break;
         }
         if (!this.state.load) {
             if (!this.state.charge) {
                 this.state.color = this.props.fav;
                 this.state.favorite_id = this.props.fav;
-                
                 if(this.props.fav!=null){
                     this.state.color = "red";
                 }
                 if (this.props.reserva === null) {
-                    this.getlocation(lodginginfo.location_id);
+                    if(this.props.lodging!==null){
+                        this.getlocation(lodginginfo.location_id);
+                    }else{
+                        this.getlodging(this.props.favorite.lodging_id);
+                    }
+                    
                 } else {
                     this.getlodging(reservationinfo.lodging_id);
                 }
-                this.setState({ charge: true });
+                this.setState({charge: true});
             }
             return (<>
                 <div className="content"></div>

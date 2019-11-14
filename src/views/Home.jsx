@@ -24,7 +24,7 @@ class Home extends React.Component {
   generatecol(info,fav) {
     return (
       <Col lg="4">
-        <CardLodging lodinfo={info} fav={fav} reserva= {null}/>
+        <CardLodging lodging={info} favorite={null} fav={fav} reserva= {null}/>
       </Col>
     );
   }

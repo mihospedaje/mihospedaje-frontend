@@ -8,6 +8,7 @@ import Login from "views/Login.jsx";
 import Lodging from "views/Lodging.jsx";
 import MyLodging from "views/MyLodging.jsx";
 import MyReservation from "views/MyReservation.jsx";
+import Favorites from "views/Favorites.jsx";
 import LodgingCreate from "views/LodgingCreate.jsx";
 import LodgingUpdate from "views/updateLodging.jsx";
 
@@ -19,15 +20,13 @@ var routes = [
     component: Home,
     layout: "/mh"
   },
-  /*
   {
     path: "/favorites",
     name: "Favoritos",
     icon: "tim-icons icon-heart-2",
-    component: Home,
+    component: Favorites,
     layout: "/mh"
   },
-  */
   {
     path: "/reservations",
     name: "Mis Reservas",
