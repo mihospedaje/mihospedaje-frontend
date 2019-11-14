@@ -16,6 +16,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import LocalLaundryServiceIcon from '@material-ui/icons/LocalLaundryService';
 import NotificationAlert from "react-notification-alert";
+import Calendar from "components/Calendar.jsx";
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -26,13 +27,16 @@ export default class Test extends React.Component {
       load: false,
       charge: false,
       id: null,
-      host_id: null
+      host_id: null,
+      color:null,
+      tofav:null,
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
     this.updatebill = this.updatebill.bind(this);
     this.Reserva = this.Reserva.bind(this);
     this.makepeticion = this.makepeticion.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.validatetoken = this.validatetoken.bind(this)
   }
   handleChange(event) {
     let data = this.state.reservation;
@@ -56,12 +60,62 @@ export default class Test extends React.Component {
       })
     }, 100);
   }
-  addtofav(){
-    if(this.state.color === null){
-        this.setState({color:"red"})
-    }else{
-        this.setState({color:null})
+  addtofav(lodging_id) {
+    if (localStorage.IsLogged === "true") {
+      if (this.state.color === null) {
+        this.createfav(lodging_id);
+      } else {
+        this.deletefav()
+      }
+    } else {
+        window.location.pathname = 'mh/login';
     }
+}
+createfav(lodging_id) {
+  axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `mutation{
+          createFavorite(favorite:{
+            user_id: ${this.state.id}
+            lodging_id: ${lodging_id}
+          }){
+            id
+          }
+        }
+                    `
+      }
+  }).then((result) => {
+      if (result.data.data != null) {
+          this.notify(["success", "Añadido a Favoritos"]);
+          this.setState({ color: "red", favorite_id: result.data.data.createFavorite.id})
+      }
+  }).catch((e) => {
+      console.log(e);
+  });
+
+}
+deletefav() {
+  axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `mutation{
+          deleteFavorite(id:${this.state.favorite_id})
+          }            
+                    `
+      }
+  }).then((result) => {
+      if (result.data.data != null) {
+          this.notify(["success", "Eliminado de Favoritos"]);
+          this.setState({ color: null })
+      }
+  }).catch((e) => {
+      console.log(e);
+  });
+  
+  //
 }
 
   changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
@@ -227,6 +281,7 @@ export default class Test extends React.Component {
             <div className="header2"> Reservar alojamiento </div>
             <div className="content2">
             <Form>
+            <Calendar/>
             <FormGroup>
               <label>Fecha de llegada</label>
               <Input id="0"  type="date"  onChange={this.handleChange}/>
@@ -401,6 +456,7 @@ export default class Test extends React.Component {
       if(result.data.data != null){
         this.setState({id:result.data.data.userByEmail.id});
         this.getlodginginfo();
+    
       }
     }).catch((e) => {
       console.log(e);
@@ -455,6 +511,13 @@ export default class Test extends React.Component {
     } = this.state;
     if (!this.state.load) {
       if (!this.state.charge) {
+        if(localStorage.My_fav!="null"){
+          this.state.favorite_id = parseInt(localStorage.My_fav);
+          this.state.color = "red";
+        }else{
+          this.state.color = null;
+        
+        }
         if(localStorage.IsLogged  == "true" ){
           this.validatetoken();
         }else{
@@ -507,11 +570,7 @@ export default class Test extends React.Component {
                 <Row>
                   <Card>
                     <CardHeader >
-                      <Row>
-                      <Col><CardTitle className="text-center"><h1 className="title">{lodginginfo.lodging_name}</h1></CardTitle></Col>
-                      <div className="justify-content-center"><IconButton style={{ color: this.state.color }} onClick={() => this.addtofav()} aria-label="add to favorites"><FavoriteIcon /></IconButton></div>
-                      </Row>
-                      
+                      <CardTitle className="text-center"><h1 className="title">{lodginginfo.lodging_name}</h1></CardTitle>
                     </CardHeader>
                     <CardBody>
                       <Row>
@@ -525,11 +584,14 @@ export default class Test extends React.Component {
                             onClick = {()=>this.viewprofile()}
                             className="avatar"
                             image="https://concepto.de/wp-content/uploads/2018/08/persona-e1533759204552.jpg"
-                            title="hospedaje"
+                            title= {lodginginfo.host_id}
                             style={{ height: 50, width: 50 }}
-                            text = "SSS"/>
-                            <p style={{ fontSize: "150%"}}>{lodginginfo.host_id}</p>
-                            
+                            />
+                            &nbsp;
+                            <label><label style={{ fontSize: "150%"}}>{lodginginfo.host_id}</label>
+                            <IconButton style={{color: this.state.color}} onClick={() => this.addtofav(lodginginfo.lodging_id)} aria-label="add to favorites"><FavoriteIcon style={{ width:35 , height:35 }} /></IconButton>
+                         </label>
+                         
                           </Row>
                          </Col>
                         </Row>

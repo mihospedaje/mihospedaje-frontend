@@ -42,6 +42,7 @@ class Register extends React.Component {
 
 
     login(){
+        console.log("SSSSSSS")
         axios({
             url: GraphQLURL,
             method: 'post',
@@ -58,6 +59,7 @@ class Register extends React.Component {
                         `
             }
           }).then((result) => {
+            console.log(result)
             var info = result.data.data.loginUser
             if(info.success === true){
                 localStorage.setItem('jwt', info.token);
@@ -73,6 +75,7 @@ class Register extends React.Component {
             this.notify(["danger", "Usuario o Contraseña Incorrectos"]);
     
           });
+          console.log("SSSSSSSsss")
        
     };
 

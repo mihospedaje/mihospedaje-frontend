@@ -17,7 +17,8 @@ class Home extends React.Component {
       load: false,
       page: null,
       id : null,
-      fav:[]
+      fav:[],
+      idfav:[]
     };
     this.getlodging = this.getlodging.bind(this);
     this.validatetoken = this.validatetoken.bind(this);
@@ -51,16 +52,19 @@ class Home extends React.Component {
         query: `query {
                     favoriteByUserid (user_id:${this.state.id}){
                           lodging_id
+                          id
                      }
                 }`
       }
     }).then((result) => {
       var info = result.data.data.favoriteByUserid;
       var favorites = []
+      var idfavorites = []
       for(let i= 0; i<info.length;i++){
          favorites[i] = info[i].lodging_id;
+         idfavorites[i] = info[i].id
       }
-      this.setState({fav:favorites});
+      this.setState({fav:favorites, idfav:idfavorites});
       this.getlodging();
     }).catch((e) => {
       console.log(e);
@@ -84,7 +88,6 @@ class Home extends React.Component {
       }
     }).then((result) => {
       var info = result.data.data.lodgingByUser
-      
       if(info.length!=0){
         let lodgings = []
       let i = 0
@@ -95,32 +98,37 @@ class Home extends React.Component {
         if (i + 1 < info.length) {
           if (i + 2 < info.length) {
             var favorites = [null,null,null]
-              
-              if(misfavorites.includes(info[i].lodging_id)){
-                favorites[0] = "red"
+            for(let h = 0; h<misfavorites.length;h++){
+              if(info[i].lodging_id === misfavorites[h]){
+                favorites[0] = this.state.idfav[h] 
               }
-              if(misfavorites.includes(info[i+1].lodging_id)){
-                favorites[1] = "red"
+              if(info[i+1].lodging_id === misfavorites[h]){
+                favorites[1] = this.state.idfav[h] 
               }
-              if(misfavorites.includes(info[i+2].lodging_id)){
-                favorites[2] = "red"
+              if(info[i+2].lodging_id === misfavorites[h]){
+                favorites[2] = this.state.idfav[h] 
               }
+          }
             recive = this.generaterow([info[i], info[i + 1], info[i + 2]],favorites);
           } else {
             var favorites = [null,null]
-              if(misfavorites.includes(info[i].lodging_id)){
-                favorites[0] = "red"
+            for(let h = 0; h<misfavorites.length;h++){
+              if(info[i].lodging_id === misfavorites[h]){
+                favorites[0] = this.state.idfav[h] 
               }
-              if(misfavorites.includes(info[i+1].lodging_id)){
-                favorites[1] = "red"
+              if(info[i+1].lodging_id === misfavorites[h]){
+                favorites[1] = this.state.idfav[h] 
               }
+          }
             recive = this.generaterow([info[i], info[i + 1]],favorites)
           }
         } else {
           var favorites = [null]
-          if(misfavorites.includes(info[i].lodging_id)){
-            favorites[0] = "red"
-          }
+          for(let h = 0; h<misfavorites.length;h++){
+            if(info[i].lodging_id === misfavorites[h]){
+              favorites[0] = this.state.idfav[h] 
+            }
+        }
           recive = this.generaterow([info[i]],favorites)
         }
         lodgings[j] = recive
@@ -211,7 +219,6 @@ class Home extends React.Component {
           </div>
         </>
       );}else{
-          console.log("SSS")
           return(
         <>
           <div className="content">
