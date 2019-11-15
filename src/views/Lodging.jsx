@@ -281,12 +281,8 @@ deletefav() {
     if(start_date!==null && end_date!==null && (this.state.reservation[2]!==undefined && this.state.reservation[2]!=="" ) && (this.state.reservation[3]!==undefined && this.state.reservation[3]!=="" ) ){
       let a = this.state.lodging.price_per_person_and_nigth * (parseInt(this.state.reservation[2])+ parseInt(this.state.reservation[3])) * ((end_date - start_date) / (1000 * 3600 * 24))
       let data = this.state.reservation;
-      start_date = start_date.toLocaleDateString()
-      start_date = start_date.split("/")
-      data[0] = start_date[2]+"-"+start_date[0]+"-"+start_date[1];
-      end_date = end_date.toLocaleDateString()
-      end_date = end_date.split("/")
-      data[1] =  end_date[2]+"-"+end_date[0]+"-"+end_date[1];
+      data[0] = this.getDateString(start_date);
+      data[1] = this.getDateString(end_date);
       if(this.state.price!==a){
         this.setState({ price: a});
       }
@@ -294,6 +290,13 @@ deletefav() {
         this.setState({reservation:data})
       }
     }    
+  }
+  getDateString(date){
+    var d = date;
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1; //Months are zero based
+    var curr_year = d.getFullYear();
+    return curr_year + "-" + curr_month + "-" + curr_date;
   }
   Reserva() {
     const from = this.state.from
@@ -360,8 +363,8 @@ deletefav() {
           {from && !to && 'Seleccione la Fecha de Salida'}
           {from &&
             to &&
-            `Seleccionado de ${from.toLocaleDateString()} a
-                ${to.toLocaleDateString()}`
+            `Seleccionado de ${this.getDateString(from)} a
+                ${this.getDateString(to)}`
                 }{' '}
             
         </label>
