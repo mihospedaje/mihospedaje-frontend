@@ -25,7 +25,12 @@ class AdminNavbar extends React.Component {
       modalSearch: false,
       color: "navbar-transparent"
     };
+    this.handleChange = this.handleChange.bind(this);
   }
+  handleChange(event) {
+    localStorage.setItem('Search_Name', event.target.value);
+  }
+
   componentDidMount() {
     window.addEventListener("resize", this.updateColor);
   }
@@ -76,9 +81,7 @@ class AdminNavbar extends React.Component {
     localStorage.setItem('View_User', "");
     window.location.pathname = '/mh/profile'
   }
-  tosearch(){
-    window.location.pathname = '/mh/home'
-  }
+
 
   render() {
     return (
@@ -190,7 +193,11 @@ class AdminNavbar extends React.Component {
           toggle={this.toggleModalSearch}
         >
           <div className="modal-header">
-            <Input id="inlineFormInputGroup" onk placeholder="BUSCAR" type="text" />
+            <Input id="inlineFormInputGroup" onKeyPress={event => {
+                if (event.key === 'Enter') {
+                  window.location.pathname = '/mh/home'
+                }
+              }} onChange={this.handleChange} placeholder="BUSCAR" type="text" />
             <button
               aria-label="Close"
               className="close"
