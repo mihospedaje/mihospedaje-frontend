@@ -7,9 +7,8 @@ import './css/showBill.css';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import {Row,Col} from "reactstrap";
+import {Row,Col,Button,CardFooter} from "reactstrap";
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -25,15 +24,13 @@ const classes = makeStyles({
   title: {
     fontSize: 14,
   },
-  pos: {
-    marginBottom: 12,
-  },
+  
 });
 
 //<Button size="small" color="primary" >VER FACTURA</Button>
 function ShowBill (props){
     return (
-        <Popup  trigger={ <Button size="small" variant="outlined" color="primary" className={classes.fab}>VER FACTURA</Button>}
+        <Popup  trigger={ <Button className="btn-fill" color="primary" >Ver Factura</Button>}
             modal
             contentStyle={contentStyle}
         >
@@ -179,7 +176,7 @@ export default class Pago extends React.Component{
                       </Typography>
                       
                     </CardContent>
-                    <CardActions>
+                    <CardFooter className="text-center" >
                       
                       <ShowBill 
                         start={this.state.data.start_date.substring(0,10)} 
@@ -190,10 +187,12 @@ export default class Pago extends React.Component{
                         descripcion= {this.state.data2.lodging_description}
                     />
                       
-                    </CardActions>
+                      </CardFooter>
+                    
                   </Card>
                 </Col>
               </Row>
+              
               </div>
               
             )
