@@ -37,15 +37,15 @@ export default class Example extends React.Component {
     return (
       <div className="RangeExample">
         <p>
-          {!from && !to && 'Please select the first day.'}
-          {from && !to && 'Please select the last day.'}
+          {!from && !to && 'Seleccione la Fecha de Arrivo'}
+          {from && !to && 'Seleccione la Fecha de Salida'}
           {from &&
             to &&
-            `Selected from ${from.toLocaleDateString()} to
+            `Seleccionado de ${from.toLocaleDateString()} a
                 ${to.toLocaleDateString()}`}{' '}
           {from && to && (
             <button className="link" onClick={this.handleResetClick}>
-              Reset
+              Reiniciar
             </button>
           )}
         </p>
@@ -72,6 +72,9 @@ export default class Example extends React.Component {
   .Selectable .DayPicker-Day--end {
     border-top-right-radius: 50% !important;
     border-bottom-right-radius: 50% !important;
+  }
+  .DayPicker {
+    font-size: 40px;
   }
 `}</style>
         </Helmet>
