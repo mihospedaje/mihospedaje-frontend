@@ -282,8 +282,8 @@ class CardLodging extends React.Component {
                                             {
                                                 this.props.reserva == null ? null : (
                                                     <div>
-                                                        <p>{reservationinfo.start_date.substring(0, 10)} -> {reservationinfo.start_date.substring(0, 10)}</p>
-                                                        <p>Huéspedes:{reservationinfo.guest_adult_number} Adulto(s), {reservationinfo.guest_children_number} Niño(s)</p>
+                                                        <p>{reservationinfo.start_date.substring(0, 10)} -> {reservationinfo.end_date.substring(0, 10)}</p>
+                                                        <p>Huéspedes: {reservationinfo.guest_adult_number} Adulto(s), {reservationinfo.guest_children_number} Niño(s)</p>
                                                         <p>Total: $15000 COP</p>
                                                     </div>
                                                 )

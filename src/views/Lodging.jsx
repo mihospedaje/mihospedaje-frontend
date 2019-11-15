@@ -283,10 +283,10 @@ deletefav() {
       let data = this.state.reservation;
       start_date = start_date.toLocaleDateString()
       start_date = start_date.split("/")
-      data[0] = start_date[2]+"-"+start_date[0]+"-"+start_date[1];
+      data[0] = start_date[2]+"-"+start_date[1]+"-"+start_date[0];
       end_date = end_date.toLocaleDateString()
       end_date = end_date.split("/")
-      data[1] =  end_date[2]+"-"+end_date[0]+"-"+end_date[1];
+      data[1] =  end_date[2]+"-"+end_date[1]+"-"+end_date[0];
       if(this.state.price!==a){
         this.setState({ price: a});
       }
@@ -350,7 +350,7 @@ deletefav() {
     border-bottom-right-radius: 50% !important;
   }
   .DayPicker {
-    font-size: 13px;
+    font-size: 12px;
   }
 `}</style>
         </Helmet>
@@ -369,17 +369,19 @@ deletefav() {
             </FormGroup>
             <FormGroup>
               <label>Número de huéspedes adultos</label>
-              <Input id="2" placeholder="1-16" type="text"  onChange={this.handleChange}/>
+              <Input id="2" placeholder="1-16" type="number"  onChange={this.handleChange}/>
             </FormGroup>
             <FormGroup>
               <label>Número de huéspedes niños</label>
-              <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
+              <Input id="3" placeholder="1-16" type="number"  onChange={this.handleChange}/>
             </FormGroup>
             <FormGroup>
               <label>Precio: </label>
               <label>${this.state.price} COP</label>
             </FormGroup>
+            <div className="text-center">
               <Button className="btn-fill" color="primary" onClick={()=>this.makepeticion()}>Hacer reserva</Button>
+              </div>
             </Form>
             </div>
           </div>
