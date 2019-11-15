@@ -4,7 +4,11 @@
     max-width: relative;
 	min-height: 80px;
     margin: 15px;
-    
+    border-color: rgb(99, 14, 96);
+    border-width: medium;
+    border-style: solid;
+    border-left: solid;
+    border-right: solid;
     
 }
 #fechas{

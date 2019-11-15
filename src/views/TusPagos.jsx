@@ -4,7 +4,8 @@ import './css/showBill.css';
 import axios from 'axios';
 import {GraphQLURL} from '../ipgraphql'
 import Pago from './pago';
-import {Row, Col} from "reactstrap";
+import {CardBody, CardText, Row, Col} from "reactstrap";
+import CardMedia from '@material-ui/core/CardMedia';
 
 class Bill extends React.Component{
   constructor(props){
@@ -15,7 +16,7 @@ class Bill extends React.Component{
       load: false,
       id : null,
       page: null
-      
+       
     }
     this.getPaymentById = this.getPaymentById.bind(this);
     this.validatetoken = this.validatetoken.bind(this);
@@ -157,18 +158,45 @@ class Bill extends React.Component{
       <div className="content"></div>
       </>)
     }else{
-      
-      return (
-        <div className="content">
-          {
-            this.state.page
-          }
+      if(this.state.page.length > 0){
+        
+        return (
+          <div className="content">
+            {
+              this.state.page
+            }
 
 
-        </div>
+          </div>
 
-      )
-      
+        )
+      }else{
+        
+        return(
+          <div className="content">
+          <Row className="justify-content-center">
+              <Col md="6">
+                    <CardBody className="justify-content-center">
+                      <CardMedia
+                        className="justify-content-center"
+                        image={require("assets/img/favicon.png")}
+                        title="hospedaje"
+                        style={{ height: 360 , width: 360}}
+                      >
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                       <CardText className="text-center">
+                           <label>Aún no tienes ninguna factura</label><br/>
+                           <label>Reserva tu lugar favorito</label><br/>
+                           <label>Para tener una experiencia inolvidable</label></CardText>
+                           </CardMedia>
+                    </CardBody>
+                 
+              </Col>
+            </Row>
+            </div>
+          )
+
+      }
 
     }
 
