@@ -283,10 +283,10 @@ deletefav() {
       let data = this.state.reservation;
       start_date = start_date.toLocaleDateString()
       start_date = start_date.split("/")
-      data[0] = start_date[2]+"-"+start_date[1]+"-"+start_date[0];
+      data[0] = start_date[2]+"-"+start_date[0]+"-"+start_date[1];
       end_date = end_date.toLocaleDateString()
       end_date = end_date.split("/")
-      data[1] =  end_date[2]+"-"+end_date[1]+"-"+end_date[0];
+      data[1] =  end_date[2]+"-"+end_date[0]+"-"+end_date[1];
       if(this.state.price!==a){
         this.setState({ price: a});
       }
