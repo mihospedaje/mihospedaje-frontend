@@ -16,7 +16,10 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import LocalLaundryServiceIcon from '@material-ui/icons/LocalLaundryService';
 import NotificationAlert from "react-notification-alert";
-import Calendar from "components/Calendar.jsx";
+import Helmet from 'react-helmet';
+import DayPicker, { DateUtils } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+import { CodeStarNotifications } from 'aws-sdk';
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -30,13 +33,18 @@ export default class Test extends React.Component {
       host_id: null,
       color:null,
       tofav:null,
+      from:null,
+      to:null,
+      price: 0
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
     this.updatebill = this.updatebill.bind(this);
     this.Reserva = this.Reserva.bind(this);
     this.makepeticion = this.makepeticion.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.validatetoken = this.validatetoken.bind(this)
+    this.validatetoken = this.validatetoken.bind(this);
+    this.handleDayClick = this.handleDayClick.bind(this);
+    this.calculateprice = this.calculateprice.bind(this);
   }
   handleChange(event) {
     let data = this.state.reservation;
@@ -223,7 +231,7 @@ deletefav() {
           query: `mutation {
             createPayment(payment: {
                         user_id: ${this.state.id}
-                        amount: 15000
+                        amount: ${this.state.price}
                         reservation_id: ${a}
                         method: "master card"                                 
                         }) {
@@ -264,7 +272,33 @@ deletefav() {
     };
     this.refs.notificationAlert.notificationAlert(options);
   };
+
+ handleDayClick(day) {
+    const range = DateUtils.addDayToRange(day, this.state);
+    this.setState(range);
+  }
+  calculateprice(start_date,end_date){
+    if(start_date!==null && end_date!==null && (this.state.reservation[2]!==undefined && this.state.reservation[2]!=="" ) && (this.state.reservation[3]!==undefined && this.state.reservation[3]!=="" ) ){
+      let a = this.state.lodging.price_per_person_and_nigth * (parseInt(this.state.reservation[2])+ parseInt(this.state.reservation[3])) * ((end_date - start_date) / (1000 * 3600 * 24))
+      let data = this.state.reservation;
+      start_date = start_date.toLocaleDateString()
+      start_date = start_date.split("/")
+      data[0] = start_date[2]+"-"+start_date[0]+"-"+start_date[1];
+      end_date = end_date.toLocaleDateString()
+      end_date = end_date.split("/")
+      data[1] =  end_date[2]+"-"+end_date[0]+"-"+end_date[1];
+      if(this.state.price!==a){
+        this.setState({ price: a});
+      }
+      if(this.state.reservation[0]!==data[0]){
+        this.setState({reservation:data})
+      }
+    }    
+  }
   Reserva() {
+    const from = this.state.from
+    const to = this.state.to ;
+    const modifiers = { start: from, end: to };
     return (
       <Popup trigger={<Button className="btn-fill" color="primary" type="submit">Reservar</Button>}
         modal
@@ -279,20 +313,71 @@ deletefav() {
               &times;
                   </a>
             <div className="header2"> Reservar alojamiento </div>
-            <div className="content2">
+            <div>
+            <br/>
             <Form>
-            <Calendar/>
+            <FormGroup >
+            <label>Seleccione las fechas de la reserva</label>
+            <div className="text-center">
+            <div className="RangeExample">
+        <DayPicker
+          className="Selectable"
+          numberOfMonths={1}
+          selectedDays={[from, { from, to }]}
+          modifiers={modifiers}
+          onDayClick={this.handleDayClick}
+          disabledDays={[
+            {
+              before: new Date(),
+            },
+          ]}
+        />
+        <Helmet>
+          <style>{`
+  .Selectable .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+    background-color: #f0f8ff !important;
+    color: #4a90e2;
+  }
+  .Selectable .DayPicker-Day {
+    border-radius: 0 !important;
+  }
+  .Selectable .DayPicker-Day--start {
+    border-top-left-radius: 50% !important;
+    border-bottom-left-radius: 50% !important;
+  }
+  .Selectable .DayPicker-Day--end {
+    border-top-right-radius: 50% !important;
+    border-bottom-right-radius: 50% !important;
+  }
+  .DayPicker {
+    font-size: 13px;
+  }
+`}</style>
+        </Helmet>
+      </div>
+      <label onChange={this.calculateprice(from,to)}>
+          {!from && !to && 'Seleccione la Fecha de Arrivo'}
+          {from && !to && 'Seleccione la Fecha de Salida'}
+          {from &&
+            to &&
+            `Seleccionado de ${from.toLocaleDateString()} a
+                ${to.toLocaleDateString()}`
+                }{' '}
+            
+        </label>
+        </div>
+            </FormGroup>
             <FormGroup>
-              <label>Número de huéspdes adultos</label>
+              <label>Número de huéspedes adultos</label>
               <Input id="2" placeholder="1-16" type="text"  onChange={this.handleChange}/>
             </FormGroup>
             <FormGroup>
-              <label>Número de huéspdes niños</label>
+              <label>Número de huéspedes niños</label>
               <Input id="3" placeholder="1-16" type="text"  onChange={this.handleChange}/>
             </FormGroup>
             <FormGroup>
               <label>Precio: </label>
-              <label>${this.state.lodging.price_per_person_and_nigth} COP</label>
+              <label>${this.state.price} COP</label>
             </FormGroup>
               <Button className="btn-fill" color="primary" onClick={()=>this.makepeticion()}>Hacer reserva</Button>
             </Form>

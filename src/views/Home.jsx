@@ -199,6 +199,7 @@ class Home extends React.Component {
     if (!this.state.load) {
       if (!this.state.charge) {
         if(localStorage.IsLogged!="true"){
+        
         this.getlodging();
         }else{
           this.validatetoken();
@@ -221,5 +222,3 @@ class Home extends React.Component {
 }
 
 export default Home;
-
-

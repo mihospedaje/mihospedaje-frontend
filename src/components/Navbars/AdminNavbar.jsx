@@ -76,6 +76,9 @@ class AdminNavbar extends React.Component {
     localStorage.setItem('View_User', "");
     window.location.pathname = '/mh/profile'
   }
+  tosearch(){
+    window.location.pathname = '/mh/home'
+  }
 
   render() {
     return (
@@ -187,7 +190,7 @@ class AdminNavbar extends React.Component {
           toggle={this.toggleModalSearch}
         >
           <div className="modal-header">
-            <Input id="inlineFormInputGroup" placeholder="BUSCAR" type="text" />
+            <Input id="inlineFormInputGroup" onk placeholder="BUSCAR" type="text" />
             <button
               aria-label="Close"
               className="close"
