@@ -123,7 +123,7 @@ export default class Pago extends React.Component{
               query: `query {
                 lodgingById(id: ${id}){
                     lodging_name
-                    
+                    lodging_description
                   }
                 }`
           }
@@ -195,31 +195,10 @@ export default class Pago extends React.Component{
                 </Col>
               </Row>
               </div>
-              /*
-                <div className='pago'>
-                    <div id='fechas'><p>
-                        Fecha inicio:  {this.state.data.start_date.substring(0,10)}
-                        <br/>
-                        Fecha final:  {this.state.data.end_date.substring(0,10)} </p></div>
-                    <div id='huespedes'><p>
-                        Adultos: {this.state.data.guest_adult_number}
-                        <br/>
-                        Niños: {this.state.data.guest_children_number}
-                     </p></div>
-                    <div id='total'><p>Total: {this.props.info.amount}</p></div>
-                    <ShowBill 
-                        start={this.state.data.start_date.substring(0,10)} 
-                        end={this.state.data.end_date.substring(0,10)}
-                        adultos = {this.state.data.guest_adult_number}
-                        ninos= {this.state.data.guest_children_number}
-                        total= {this.props.info.amount}
-                    />
-                </div>
-              */
+              
             )
         }
         
-
       }
     
 }
