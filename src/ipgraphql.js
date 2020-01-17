@@ -1,1 +1,1 @@
-export const GraphQLURL = 'http://18.190.94.157:5000/graphql';
+export const GraphQLURL = 'http://52.72.5.188:5000/graphql';
