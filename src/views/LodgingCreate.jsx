@@ -4,6 +4,9 @@ import { GraphQLURL } from '../ipgraphql'
 import CardMedia from '@material-ui/core/CardMedia';
 import { Row, Col, Card, CardBody, CardHeader, CardTitle, Button, Input, FormGroup, Form, CardFooter } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
+import ReactFileReader from 'react-file-reader';
+import ItemsCarousel from 'react-items-carousel';
+import range from 'lodash/range';
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -15,11 +18,13 @@ export default class Test extends React.Component {
       location: [],
       locationid: [],
       hourframe:[],
-      id : null
+      id : null,
+      uploadimagen: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.makepeticion = this.makepeticion.bind(this);
+    this.loadimage = this.loadimage.bind(this);
   }
   handleChange(event) {
     let data = this.state.lodging;
@@ -37,6 +42,39 @@ export default class Test extends React.Component {
       data[parseInt(event.target.id, 10)] = 1
     }
     this.setState({ lodging: data });
+  }
+  changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
+  
+
+  componentWillMount() {
+    this.setState({
+      children: [],
+      activeItemIndex: 0,
+    });
+    setTimeout(() => {
+      this.setState({
+        children: range(1).map(i => <CardMedia key={i}
+          image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
+          title="hospedaje"
+          style={{ height: 400 }}
+        />)
+      })
+    }, 100);
+  }
+  componentWillMount1() {
+    this.setState({
+      children: [],
+      activeItemIndex: 0,
+    });
+    setTimeout(() => {
+      this.setState({
+        children: range(this.state.uploadimagen.length).map(i => <CardMedia key={i}
+          image = {'data:image/png;base64' + this.state.uploadimagen[i]}
+          title="hospedaje"
+          style={{ height: 400 }}
+        />)
+      })
+    }, 100);
   }
 
   // INFORMACION
@@ -202,9 +240,7 @@ export default class Test extends React.Component {
       }).then((result) => {
         if (result.data.data !== null) {
           let a = result.data.data.createLodging.lodging_id
-          this.notify(["success", "Registro Exitoso"]);
-          localStorage.setItem('View_Lodging', parseInt(a));
-          window.location.pathname = '/mh/lodging'
+          this.loadimage(a);          
 
         } else {
           this.notify(["danger", "Registro Fallido"]);
@@ -236,6 +272,44 @@ export default class Test extends React.Component {
       autoDismiss: 7
     };
     this.refs.notificationAlert.notificationAlert(options);
+  };
+  loadimage(a) {
+    console.log(this.state.uploadimagen.length);
+    if (this.state.uploadimagen.length!=0) {
+      axios({
+        url: GraphQLURL,
+        method: 'post',
+        data: {
+          query: `mutation{
+            createLodging_image(lodging_image:{
+              lodging_id: ${a}
+              url: "${this.state.uploadimagen[0]}"    
+          }){
+            lodging_image_id
+      }
+    }
+                    `
+        }
+      }).then((result) => {
+        if (result.data.data !== null) {
+          let data = this.state.uploadimagen;
+          data = data.splice(1,1);
+          this.setState({ uploadimagen: data});
+          this.loadimage(a);          
+        } else {
+          this.notify(["danger", "Registro Fallido"]);
+        }
+
+      }).catch((e) => {
+        console.log(e)
+        this.notify(["danger", "Registro Fallido"]);
+
+      });
+    } else {
+      this.notify(["success", "Registro Exitoso"]);
+      localStorage.setItem('View_Lodging', parseInt(a));
+      window.location.pathname = '/mh/lodging'
+    }
   };
   getid(email) {
     axios({
@@ -292,8 +366,25 @@ export default class Test extends React.Component {
       window.location.pathname = 'mh/login'
     });
   }
+  handleFiles = (files) => {
+    let data = this.state.uploadimagen;
+    console.log(data)
+    const data1 = data.splice(1,1);
+    console.log(data1)
+    data = [];
+    for(let i = 0; i< files.base64.length;i++){
+      data[i] = 'data:image/png;base64' + files.base64[i];
+
+    }
+    this.setState({ uploadimagen: data});
+    this.componentWillMount1();
+  }
 
   render() {
+    const {
+      activeItemIndex,
+      children,
+    } = this.state;
     if (!this.state.load) {
       if (!this.state.charge) {
         let horas = this.state.hourframe;
@@ -321,12 +412,30 @@ export default class Test extends React.Component {
               <Col lg="5">
                 <Card className="card-user">
                   <CardBody>
-                    <CardMedia
-                      image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-                      title="hospedaje"
-                      style={{ height: 400 }}
-                    />
-                  </CardBody>
+                    <ItemsCarousel
+                      // Carousel configurations
+                      numberOfCards={1}
+                      gutter={0}
+                      showSlither={true}
+                      firstAndLastGutter={true}
+                      freeScrolling={false}
+                      // Active item configurations
+                      requestToChangeActive={this.changeActiveItem}
+                      activeItemIndex={activeItemIndex}
+                      activePosition={'center'}
+                      chevronWidth={150}
+                      chevronHeigth={150}
+                      rightChevron={' '}
+                      leftChevron={' '}
+                      outsideChevron={false}
+                    >
+                      {children}
+                    </ItemsCarousel>
+                    <label>Suba las fotos y deslize el carrusel</label>
+                    <ReactFileReader fileTypes = {[".jpeg", ".png", ".jpg"]} base64={true} multipleFiles={true} handleFiles={this.handleFiles}>
+                        <Button className="btn-fill" color="primary">Upload</Button>
+                    </ReactFileReader>
+                  </CardBody>                  
                 </Card>
               </Col>
               <Col lg="7">

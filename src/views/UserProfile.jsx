@@ -4,7 +4,9 @@ import Popup from "reactjs-popup";
 import NotificationAlert from "react-notification-alert";
 import CardMedia from '@material-ui/core/CardMedia';
 import { GraphQLURL } from '../ipgraphql'
+import { defaultprofile } from '../defaultprofile'
 import { Card, CardHeader, CardBody, CardFooter, CardText, Row, Col, Button, Input } from "reactstrap";
+import ReactFileReader from 'react-file-reader';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -80,7 +82,7 @@ class UserProfile extends React.Component {
                         email: "${this.state.profile[3]}"
                         password: "${this.state.register[4]}"                        
                         idrole:1
-                        image: ""
+                        image: "${this.state.imagenp}"
                         }) {
                         id
                         }
@@ -168,6 +170,7 @@ class UserProfile extends React.Component {
                     birthdate
                     email
                     password
+                    image
                   }
            }`
       }
@@ -179,9 +182,14 @@ class UserProfile extends React.Component {
         data[2] = result.data.data.userById.birthdate.substring(0, 10);
         data[3] = result.data.data.userById.email;
         data[4] = result.data.data.userById.password;
-        data[5] = "assets/img/2.jpg";
+        data[5] = result.data.data.userById.image;
         let adicional = [data[0], data[1], data[2], data[3], data[4], data[5]]
-        this.setState({ profile: data, load: true, register: adicional });
+        if(data[5]==="" || data[5]===null){
+          data[5] = defaultprofile;
+        }
+          data[5] = defaultprofile;
+        
+        this.setState({ profile: data, load: true, register: adicional});
       }
     }).catch((e) => {
       console.log(e);
@@ -242,6 +250,17 @@ class UserProfile extends React.Component {
       window.location.pathname = 'mh/login'
     });
   }
+  handleFiles = (files) => {
+    let imgp = files.base64
+    console.log(files)
+    let base64 = 'data:image/png;base64' + imgp;
+    console.log(base64)
+    this.setState({imagenp:imgp});
+    let data = this.state.profile;
+    data[5] = base64;
+    this.setState({ profile: data});
+    //this.makepeticion()
+  }
 
   render() {
     console.log(localStorage)
@@ -275,11 +294,16 @@ class UserProfile extends React.Component {
                       <div className="block block-one" />
                     </div>
                     <CardMedia
-                      image="https://www.emprenderalia.com/wp-content/uploads/tipo-de-persona-emprendedor-1152x768.jpg"
-                      title="hospedaje"
-                      style={{ height: 360 }}
+                      //image="https://www.emprenderalia.com/wp-content/uploads/tipo-de-persona-emprendedor-1152x768.jpg"
+                      image = {'data:image/png;base64' + this.state.profile[5]}
+                      title= {this.state.profile[0]}
+                      style={{ height: 360}}
                     />
+                    <ReactFileReader fileTypes = {[".jpeg", ".png", ".jpg"]} base64={true} multipleFiles={true} handleFiles={this.handleFiles}>
+                        <Button className="btn-fill" color="primary">Upload</Button>
+                    </ReactFileReader>
                   </CardBody>
+
                 </Card>
               </Col>
               <Col md="8">
