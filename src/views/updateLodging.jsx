@@ -397,8 +397,8 @@ export default class Test extends React.Component {
     }
     } else {
       this.notify(["success", "Actualización exitosa de id: ".concat(a)]);
-      //localStorage.setItem('View_Lodging', parseInt(a));
-      //window.location.pathname = '/mh/lodging'
+      localStorage.setItem('View_Lodging', parseInt(a));
+      window.location.pathname = '/mh/lodging'
     }
   };
 
