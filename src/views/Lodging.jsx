@@ -20,6 +20,7 @@ import Helmet from 'react-helmet';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { CodeStarNotifications } from 'aws-sdk';
+import { defaulthome } from '../defaulthome'
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -35,7 +36,8 @@ export default class Test extends React.Component {
       tofav:null,
       from:null,
       to:null,
-      price: 0
+      price: 0,
+      images: []
     };
     this.getlodginginfo = this.getlodginginfo.bind(this);
     this.updatebill = this.updatebill.bind(this);
@@ -60,9 +62,9 @@ export default class Test extends React.Component {
 
     setTimeout(() => {
       this.setState({
-        children: range(3).map(i => <CardMedia key={i}
-          image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-          title="hospedaje"
+        children: range(this.state.images.length).map(i => <CardMedia key={i}
+          image = {'data:image/png;base64' + this.state.images[i]}
+          title= {this.state.lodging.lodging_name}
           style={{ height: 400 }}
         />)
       })
@@ -144,7 +146,40 @@ deletefav() {
       if(result.data.data!=null){
         let a = information.host_id
         information.host_id = result.data.data.userById.name
-        this.setState({ lodging: information, load: true, host_id: a });
+        this.setState({host_id: a});
+        this.getImages(information);
+      
+      }else{
+ 
+      }
+
+  }).catch((e) =>{
+    console.log(e);
+  });
+  }
+  getImages(information){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `query {
+                  lodging_imageByLodgingid(lodging_id:${localStorage.View_Lodging}) {
+                  url
+                  }
+           }`
+      }
+  }).then((result) => {
+      if(result.data.data!=null){
+        let data = this.state.images;
+        let info = result.data.data.lodging_imageByLodgingid;
+        for(let i = 0; i<info.length;i++){
+          data[i] = info[i].url;
+        }
+        if (info.length===0){
+          data[0] = defaulthome;
+        }
+        this.setState({ lodging: information, load: true, images:data});
+        this.componentWillMount();
       
       }else{
  
@@ -645,6 +680,11 @@ deletefav() {
                     >
                       {children}
                     </ItemsCarousel>
+                    {
+                          this.state.images.length <= 1 ? null : (
+                            <label>Deslize el carrusel para ver todas las fotos del alojamiento</label>
+                          )
+                    }
                   </CardBody>
                 </Card>
               </Col>
