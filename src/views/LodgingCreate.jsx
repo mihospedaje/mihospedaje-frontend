@@ -7,6 +7,7 @@ import NotificationAlert from "react-notification-alert";
 import ReactFileReader from 'react-file-reader';
 import ItemsCarousel from 'react-items-carousel';
 import range from 'lodash/range';
+import { defaulthome } from '../defaulthome';
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -54,8 +55,8 @@ export default class Test extends React.Component {
     setTimeout(() => {
       this.setState({
         children: range(1).map(i => <CardMedia key={i}
-          image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-          title="hospedaje"
+          image= {'data:image/png;base64' + defaulthome}
+          title="Mi Hospedaje"
           style={{ height: 400 }}
         />)
       })
@@ -101,7 +102,7 @@ export default class Test extends React.Component {
         data[i] = (info[i].city).concat(", ", info[i].country)
         datid[i] = info[i].location_id
       }
-
+      this.componentWillMount();
       this.setState({ load: true, location: data, locationid: datid });
 
     }).catch((e) => {
@@ -274,7 +275,6 @@ export default class Test extends React.Component {
     this.refs.notificationAlert.notificationAlert(options);
   };
   loadimage(a) {
-    console.log(this.state.uploadimagen.length);
     if (this.state.uploadimagen.length!=0) {
       axios({
         url: GraphQLURL,
@@ -368,9 +368,7 @@ export default class Test extends React.Component {
   }
   handleFiles = (files) => {
     let data = this.state.uploadimagen;
-    console.log(data)
     const data1 = data.splice(1,1);
-    console.log(data1)
     data = [];
     for(let i = 0; i< files.base64.length;i++){
       data[i] = 'data:image/png;base64' + files.base64[i];
@@ -431,7 +429,12 @@ export default class Test extends React.Component {
                     >
                       {children}
                     </ItemsCarousel>
-                    <label>Suba las fotos y deslize el carrusel</label>
+                    {
+                          this.state.uploadimagen.length <= 1 ? null : (
+                            <label>Deslize el carrusel para ver todas las fotos cargadas en la plataforma</label>
+                          )
+                    }
+                   
                     <ReactFileReader fileTypes = {[".jpeg", ".png", ".jpg"]} base64={true} multipleFiles={true} handleFiles={this.handleFiles}>
                         <Button className="btn-fill" color="primary">Upload</Button>
                     </ReactFileReader>

@@ -4,6 +4,10 @@ import { GraphQLURL } from '../ipgraphql'
 import CardMedia from '@material-ui/core/CardMedia';
 import { Row, Col, Card, CardBody, CardHeader, CardTitle, Button, Input, FormGroup, Form, CardFooter } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
+import ReactFileReader from 'react-file-reader';
+import ItemsCarousel from 'react-items-carousel';
+import range from 'lodash/range';
+import {defaulthome} from '../defaulthome';
 
 export default class Test extends React.Component {
   constructor(props) {
@@ -14,7 +18,9 @@ export default class Test extends React.Component {
       charge: false,
       location: [],
       locationid: [],
-      hourframe:[]
+      hourframe:[],
+      images:[],
+      idimag:[]
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
@@ -108,7 +114,6 @@ export default class Test extends React.Component {
           } `
         }
       }).then((result) => {
-        localStorage.setItem('Update_Lodging', null);
         if (result.data.data != null) {
           let info = result.data.data.lodgingById
           let data = this.state.lodging
@@ -136,7 +141,8 @@ export default class Test extends React.Component {
           data[21] = info.lodging_description
           data[22] = info.host_id
           data[23] = info.lodging_id
-          this.setState({lodging:data, load:true})
+          this.setState({lodging:data})
+          this.getImages()
           
         } else {
           this.notify(["danger", "Registro Fallido"]);
@@ -147,6 +153,76 @@ export default class Test extends React.Component {
         this.notify(["danger", "Registro Fallido"]);
 
       });
+  }
+  changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
+  
+  componentWillMount() {
+    this.setState({
+      children: [],
+      activeItemIndex: 0,
+    });
+    setTimeout(() => {
+      this.setState({
+        children: range(this.state.images.length).map(i => <CardMedia key={i}
+          image= {'data:image/png;base64' + this.state.images[i]}
+          title="Mi Hospedaje"
+          style={{ height: 400 }}
+        />)
+      })
+    }, 100);
+  }
+  componentWillMount1() {
+    this.setState({
+      children: [],
+      activeItemIndex: 0,
+    });
+    setTimeout(() => {
+      this.setState({
+        children: range(1).map(i => <CardMedia key={i}
+          image= {'data:image/png;base64' + defaulthome}
+          title="Mi Hospedaje"
+          style={{ height: 400 }}
+        />)
+      })
+    }, 100);
+  }
+  getImages(){
+    axios({
+      url: GraphQLURL,
+      method: 'post',
+      data: {
+          query: `query {
+                  lodging_imageByLodgingid(lodging_id:${localStorage.Update_Lodging}) {
+                  lodging_image_id
+                  url
+                  }
+           }`
+      }
+  }).then((result) => {
+    localStorage.setItem('Update_Lodging', null);
+        
+      if(result.data.data!=null){
+        let data = this.state.images;
+        let data1 = this.state.idimag;
+        let info = result.data.data.lodging_imageByLodgingid;
+        for(let i = 0; i<info.length;i++){
+          data[i] = info[i].url;
+          data1[i] = info[i].lodging_image_id;
+        }
+        this.setState({load: true, images:data, idimag:data1});
+        if (info.length===0){
+          this.componentWillMount1();
+        }else{
+          this.componentWillMount();
+        }
+      
+      }else{
+ 
+      }
+
+  }).catch((e) =>{
+    console.log(e);
+  });
   }
 
   makepeticion() {
@@ -236,9 +312,7 @@ export default class Test extends React.Component {
       }).then((result) => {
         if (result.data.data != null) {
           let a = result.data.data.updateLodging.lodging_id
-          this.notify(["success", "Actualización exitosa de id: ".concat(a)]);
-          localStorage.setItem('View_Lodging', parseInt(a));
-          window.location.pathname = '/mh/lodging'
+          this.loadimage(a);
 
         } else {
           this.notify(["danger", "Registro Fallido"]);
@@ -253,6 +327,81 @@ export default class Test extends React.Component {
       this.notify(["danger", "Datos Incompletos"]);
     }
   };
+
+  loadimage(a) {
+    if (this.state.images.length!=0) {
+      if(this.state.idimag.length!=0){
+        axios({
+          url: GraphQLURL,
+          method: 'post',
+          data: {
+            query: `mutation{
+              updateLodging_image(id:${this.state.idimag[0]},lodging_image:{
+                lodging_id: ${a}
+                url: "${this.state.images[0]}"   
+              }){
+                lodging_image_id
+          }
+        }
+                        `
+          }
+        }).then((result) => {
+          if (result.data.data != null) {
+            let data = this.state.images;
+            data = data.splice(1,1);
+            let data1 = this.state.idimag;
+            data1 = data1.splice(1,1);            
+            this.setState({ images: data, idimag: data1});
+            this.loadimage(a); 
+  
+          } else {
+            this.notify(["danger", "Registro Fallido1"]);
+          }
+  
+        }).catch((e) => {
+          console.log(e)
+          this.notify(["danger", "Registro Fallido"]);
+  
+        });
+
+      }else{
+      axios({
+        url: GraphQLURL,
+        method: 'post',
+        data: {
+          query: `mutation{
+            createLodging_image(lodging_image:{
+              lodging_id: ${a}
+              url: "${this.state.images[0]}"    
+          }){
+            lodging_image_id
+      }
+    }
+                    `
+        }
+      }).then((result) => {
+        if (result.data.data !== null) {
+          let data = this.state.images;
+          data = data.splice(1,1);
+          this.setState({ images: data});
+          this.loadimage(a);          
+        } else {
+          this.notify(["danger", "Registro Fallido"]);
+        }
+
+      }).catch((e) => {
+        console.log(e)
+        this.notify(["danger", "Registro Fallido"]);
+
+      });
+    }
+    } else {
+      this.notify(["success", "Actualización exitosa de id: ".concat(a)]);
+      //localStorage.setItem('View_Lodging', parseInt(a));
+      //window.location.pathname = '/mh/lodging'
+    }
+  };
+
   notify = place => {
     var type = place[0];
     var options = {};
@@ -277,9 +426,23 @@ export default class Test extends React.Component {
     localStorage.setItem('View_Lodging', parseInt(id));
     window.location.pathname = '/mh/lodging'
   }
+  handleFiles = (files) => {
+    let data = this.state.images;
+    data = [];
+    for(let i = 0; i< files.base64.length;i++){
+      data[i] = 'data:image/png;base64' + files.base64[i];
+
+    }
+    this.setState({ images: data});
+    this.componentWillMount();
+  }
 
 
   render() {
+    const {
+      activeItemIndex,
+      children,
+    } = this.state;
     if (!this.state.load) {
       if (!this.state.charge) {
         let horas = this.state.hourframe;
@@ -307,11 +470,34 @@ export default class Test extends React.Component {
               <Col lg="5">
                 <Card className="card-user">
                   <CardBody>
-                    <CardMedia
-                      image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-                      title="hospedaje"
-                      style={{ height: 400 }}
-                    />
+                  <ItemsCarousel
+                      // Carousel configurations
+                      numberOfCards={1}
+                      gutter={0}
+                      showSlither={true}
+                      firstAndLastGutter={true}
+                      freeScrolling={false}
+                      // Active item configurations
+                      requestToChangeActive={this.changeActiveItem}
+                      activeItemIndex={activeItemIndex}
+                      activePosition={'center'}
+                      chevronWidth={150}
+                      chevronHeigth={150}
+                      rightChevron={' '}
+                      leftChevron={' '}
+                      outsideChevron={false}
+                    >
+                      {children}
+                    </ItemsCarousel>
+                    {
+                          this.state.images.length <= 1 ? null : (
+                            <label>Deslize el carrusel para ver todas las fotos cargadas en la plataforma</label>
+                          )
+                    }
+                   
+                    <ReactFileReader fileTypes = {[".jpeg", ".png", ".jpg"]} base64={true} multipleFiles={true} handleFiles={this.handleFiles}>
+                        <Button className="btn-fill" color="primary">Upload</Button>
+                    </ReactFileReader>
                   </CardBody>
                 </Card>
               </Col>

@@ -8,14 +8,14 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Card, Row, Col, CardBody } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
-
+import { defaulthome } from '../defaulthome'
 
 
 
 class CardLodging extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { color: null, load: false, charge: false, location: "", lodging: "", id: null, favorite_id:null };
+        this.state = { color: null, load: false, charge: false, location: "", lodging: "", id: null, favorite_id:null,images:[],lodid:null };
         this.addtofav = this.addtofav.bind(this);
         this.getlocation = this.getlocation.bind(this);
         this.createfav = this.createfav.bind(this);
@@ -42,12 +42,44 @@ class CardLodging extends React.Component {
             country = info.country
             city = info.city
             let l = city.concat(", ", country)
-            this.setState({ load: true, location: l })
+            this.setState({location: l })
+            this.getImages();
+            
 
         }).catch((e) => {
             console.log(e);
         });
     };
+
+    getImages(){
+        axios({
+          url: GraphQLURL,
+          method: 'post',
+          data: {
+              query: `query {
+                      lodging_imageByLodgingid(lodging_id:${this.state.lodid}) {
+                      url
+                      }
+               }`
+          }
+      }).then((result) => {
+          if(result.data.data!=null){
+            let data = this.state.images;
+            let info = result.data.data.lodging_imageByLodgingid;
+            if(info.length===0){
+                data[0] = defaulthome;
+            }else{
+                data[0] = info[0].url;
+            }
+            
+            this.setState({load: true, images:data});
+          }else{
+     
+          }    
+      }).catch((e) =>{
+        console.log(e);
+      });
+      }
 
     getlodging(id) {
         axios({
@@ -241,12 +273,15 @@ class CardLodging extends React.Component {
                 if (this.props.reserva === null) {
                     if(this.props.lodging!==null){
                         this.getlocation(lodginginfo.location_id);
+                        this.setState({lodid: this.props.lodging.lodging_id});
                     }else{
                         this.getlodging(this.props.favorite.lodging_id);
+                        this.setState({lodid: this.props.favorite.lodging_id});
                     }
                     
                 } else {
                     this.getlodging(reservationinfo.lodging_id);
+                    this.setState({lodid: reservationinfo.lodging_id});
                 }
                 this.setState({charge: true});
             }
@@ -263,8 +298,8 @@ class CardLodging extends React.Component {
                         <Card >
                             <CardActionArea >
                                 <CardMedia
-                                    image="https://pix6.agoda.net/hotelImages/348529/-1/0eb81c6bf886dc45d066e7c1f2b94f11.jpg"
-                                    title="hospedaje"
+                                    image= {'data:image/png;base64' + this.state.images[0]}
+                                    title= {lodginginfo.lodging_name}
                                     style={{ height: 250 }}
                                     onClick={() => this.gotolodging(lodginginfo.lodging_id)}
                                 />
